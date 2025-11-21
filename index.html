@@ -268,6 +268,7 @@
             getDoc
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
+        // Firebase config
         const firebaseConfig = {
             apiKey: "AIzaSyBpIKSxSnYfvBQia3rlOseBtnSVqThX18c",
             authDomain: "superblyns.firebaseapp.com",
@@ -281,16 +282,71 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        // DOM elements
         const balanceSpan = document.getElementById('currentBalance');
         const accountNumberShown = document.getElementById('accountNumberShown');
         const accountNumberHidden = document.getElementById('accountNumberHidden');
         const welcomeName = document.querySelector('main h1');
         const payRect = document.querySelector('.pay-rect');
         const actionTiles = document.querySelectorAll('.action-tile');
+        const btnToggleBalance = document.getElementById('btnToggleBalance');
 
+        let userBalance = "0.00";
+        let activated = false;
+
+        // Toggle balance
+        let isBalanceHidden = false;
+        btnToggleBalance?.addEventListener('click', () => {
+            isBalanceHidden = !isBalanceHidden;
+            if (isBalanceHidden) {
+                balanceSpan.textContent = "XXXXX.XX";
+                accountNumberShown.classList.add('hidden');
+                accountNumberHidden.classList.remove('hidden');
+            } else {
+                balanceSpan.textContent = activated ? userBalance : "0000";
+                accountNumberShown.classList.remove('hidden');
+                accountNumberHidden.classList.add('hidden');
+            }
+        });
+
+        // Handle tile clicks
+        window.handleTileClick = (actionName) => {
+            const blockedTiles = ["Bayar", "Tambah Wang", "Transfer"];
+            if (!activated && blockedTiles.includes(actionName)) {
+                alert("Akaun belum aktif. Tile ini tidak boleh digunakan.");
+                return;
+            }
+
+            let targetUrl = "https://www.google.com";
+            switch (actionName) {
+                case 'Bayar':
+                    targetUrl = "https://www.google.com/search?q=pembayaran+bank+online";
+                    break;
+                case 'Tambah Wang':
+                    targetUrl = "https://www.google.com/search?q=tambah+wang+bank";
+                    break;
+                case 'Transfer':
+                    targetUrl = "https://www.google.com/search?q=pindah+dana+bank";
+                    break;
+                case 'Aktifkan':
+                    targetUrl = "https://www.google.com/search?q=aktifkan+akaun+bank";
+                    break;
+                case 'Akaun Saya':
+                    targetUrl = "https://www.google.com/search?q=akaun+saya+bank";
+                    break;
+            }
+            window.location.href = targetUrl;
+        }
+
+        // Handle logout
+        window.handleLogout = async () => {
+            await signOut(auth);
+            window.location.href = "https://blynsbank.github.io/logmasuk/";
+        }
+
+        // On page load / refresh
         onAuthStateChanged(auth, async (user) => {
             if (!user) {
-                // Kalau tak login, redirect ke login page
                 window.location.href = "https://blynsbank.github.io/logmasuk/";
                 return;
             }
@@ -305,82 +361,34 @@
                 return;
             }
 
-            const userData = snap.data();
-            const activated = userData.activated || false;
+            const data = snap.data();
+            activated = data.activated || false;
+            userBalance = data.balance || "0.00";
 
-            // Set nama user
-            welcomeName.textContent = userData.fullname || "Pengguna";
+            // Set nama & balance
+            welcomeName.textContent = data.fullname || "Pengguna";
+            balanceSpan.textContent = activated ? userBalance : "0000";
+            accountNumberShown.textContent = activated ? data.cardNumb : "Akaun anda belum didaftar";
+            accountNumberHidden.textContent = "**** **** **** XXXX";
 
-            // Set balance & card
-            if (activated) {
-                balanceSpan.textContent = userData.balance || "0000";
-                accountNumberShown.textContent = userData.cardNumb || "0000";
-                accountNumberHidden.textContent = "*** **** **** XXXX";
-            } else {
-                balanceSpan.textContent = "0000";
-                accountNumberShown.textContent = "Akaun anda belum didaftar";
-                accountNumberHidden.textContent = "Akaun anda belum didaftar";
-
-                // Disable tiles kecuali logout
-                payRect.classList.add('opacity-50', 'cursor-not-allowed');
-                actionTiles.forEach(tile => {
+            // Handle blocking tiles
+            actionTiles.forEach(tile => {
+                const tileName = tile.innerText.trim();
+                const shouldBlock = !activated && ["Bayar", "Tambah Money", "Transfer"].some(name => tileName.includes(name));
+                if (shouldBlock) {
                     tile.classList.add('opacity-50', 'cursor-not-allowed');
                     tile.onclick = () => alert("Akaun belum aktif. Tile ini tidak boleh digunakan.");
-                });
+                }
+            });
+
+            // Pay rectangle
+            if (!activated) {
+                payRect.classList.add('opacity-50', 'cursor-not-allowed');
+                payRect.onclick = () => alert("Akaun belum aktif. Tile ini tidak boleh digunakan.");
             }
         });
-
-        // Fungsi toggle balance
-        const btnToggleBalance = document.getElementById('btnToggleBalance');
-        let isBalanceHidden = false;
-        btnToggleBalance?.addEventListener('click', () => {
-            isBalanceHidden = !isBalanceHidden;
-            if (isBalanceHidden) {
-                balanceSpan.textContent = "XXXXX.XX";
-                accountNumberShown.classList.add('hidden');
-                accountNumberHidden.classList.remove('hidden');
-            } else {
-                balanceSpan.textContent = balanceSpan.textContent === "0000" ? "0000" : balanceSpan.textContent;
-                accountNumberShown.classList.remove('hidden');
-                accountNumberHidden.classList.add('hidden');
-            }
-        });
-
-        // Fungsi handle tiles
-        window.handleTileClick = (actionName) => {
-            const isInactive = payRect.classList.contains('cursor-not-allowed');
-            if (isInactive) {
-                alert("Akaun belum aktif. Tile ini tidak boleh digunakan.");
-                return;
-            }
-
-            let targetUrl = "https://www.google.com";
-            switch (actionName) {
-                case 'Bayar':
-                    targetUrl = "https://www.google.com/search?q=pembayaran+bank+online";
-                    break;
-                case 'TambahWang':
-                    targetUrl = "https://www.google.com/search?q=tambah+wang+bank";
-                    break;
-                case 'PindahDana':
-                    targetUrl = "https://www.google.com/search?q=pindah+dana+bank";
-                    break;
-                case 'AktifkanKad':
-                    targetUrl = "https://www.google.com/search?q=aktifkan+akaun+bank";
-                    break;
-                case 'TetapanAkaun':
-                    targetUrl = "https://www.google.com/search?q=tetapan+akaun+bank";
-                    break;
-            }
-            window.location.href = targetUrl;
-        }
-
-        // Fungsi handle logout
-        window.handleLogout = async () => {
-            await signOut(auth);
-            window.location.href = "https://blynsbank.github.io/logmasuk/";
-        }
     </script>
+
 
 
 </body>
