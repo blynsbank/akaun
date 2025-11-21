@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blyns Bank - Laman Utama</title>
+    <!-- Memuat Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+
+        :root {
+            --primary-color: #0d9488;
+            /* Teal-600 */
+            --primary-light: #2dd4bf;
+            /* Teal-400 */
+            --primary-glow: rgba(13, 148, 136, 0.5);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000000;
+            /* Latar belakang utama hitam */
+            background-image:
+                radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 1) 0, transparent 50%),
+                radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 1) 0, transparent 50%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* --- GAYA KONTENA UTAMA --- */
+        .app-container {
+            width: 100%;
+            min-height: 100vh;
+            max-width: 420px;
+            background: #0a0a0a;
+            /* Hampir hitam */
+            position: relative;
+            color: white;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 1);
+        }
+
+        /* --- BACKGROUND BLOB EFFECTS --- */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .blob-1 {
+            top: -10%;
+            left: -20%;
+            width: 300px;
+            height: 300px;
+            background: #0d9488;
+        }
+
+        .blob-2 {
+            bottom: -10%;
+            right: -20%;
+            width: 250px;
+            height: 250px;
+            background: #3b82f6;
+        }
+
+        /* --- HEADER BLACK (Untuk Blending Logo) --- */
+        .black-header {
+            background-color: #000000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        /* --- BALANCE CARD --- */
+        .balance-card {
+            background: linear-gradient(135deg, #0f766e 0%, #10b981 100%);
+            /* Teal Gradient */
+            box-shadow: 0 15px 30px -8px rgba(13, 148, 136, 0.7);
+            position: relative;
+            z-index: 10;
+        }
+
+        /* --- ACTION TILE --- */
+        .action-tile {
+            background: rgba(255, 255, 255, 0.05);
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .action-tile:hover {
+            background: rgba(13, 148, 136, 0.1);
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(13, 148, 136, 0.2);
+        }
+
+        /* Pay Rectangle inside card */
+        .pay-rect {
+            background: rgba(255, 255, 255, 0.2);
+            /* Semi-transparent white */
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Ambient Blobs -->
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+
+        <!-- HEADER -->
+        <header class="black-header sticky top-0 z-20 px-6 py-4 flex items-center justify-between">
+            <!-- Logo (Kiri) -->
+            <img src="https://i.postimg.cc/QdHXM5RS/Blyns-Bank-Head-Logo.png" alt="Blyns Bank" class="h-10 w-auto">
+
+            <!-- Butang Logout (Kanan) -->
+            <button id="btnLogout" onclick="handleLogout()" class="text-gray-400 hover:text-red-500 transition duration-150 p-2 rounded-full">
+                <!-- Icon Logout (Lucide) -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <path d="M16 17l5-5-5-5" />
+                    <path d="M21 12H9" />
+                </svg>
+            </button>
+        </header>
+
+        <!-- KANDUNGAN UTAMA HOMEPAGE -->
+        <main class="p-6 relative z-10">
+            <!-- SELAMAT DATANG -->
+            <div class="mb-6">
+                <p class="text-lg text-gray-400 font-light">Selamat Datang,</p>
+                <h1 class="text-3xl font-bold text-white tracking-tight">Iskandar Zulkarnain</h1>
+            </div>
+
+            <!-- BALANCE CARD -->
+            <div class="balance-card p-6 rounded-2xl mb-8">
+                <div class="flex justify-between items-center mb-1">
+                    <p class="text-white text-sm opacity-80">Baki Semasa</p>
+                    <!-- Butang Toggle Hide/Show (Mata) -->
+                    <button id="btnToggleBalance" class="text-white opacity-90 p-1 hover:opacity-100 transition">
+                        <!-- Default: Show (Eye) -->
+                        <svg id="iconEye" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye">
+                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                            <circle cx="12" cy="12" r="3" />
+                        </svg>
+                        <!-- Hide: Eye Off -->
+                        <svg id="iconEyeOff" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-eye-off hidden">
+                            <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
+                            <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" />
+                            <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.78 9.78 0 0 0 5.46-1.61" />
+                            <line x1="2" x2="22" y1="2" y2="22" />
+                        </svg>
+                    </button>
+                </div>
+
+                <h2 class="text-4xl font-extrabold text-white tracking-wide mb-4">
+                    RM <span id="currentBalance">25,480.50</span>
+                </h2>
+
+                <div class="flex justify-between items-center mb-6">
+                    <p class="text-xs text-white opacity-70">
+                        <span id="accountNumberShown">*** **** **** 5678</span>
+                        <span id="accountNumberHidden" class="hidden">*** **** **** XXXX</span>
+                    </p>
+                </div>
+
+                <!-- Rectangle "Pay" Button -->
+                <div class="pay-rect w-full py-3 px-4 rounded-xl flex items-center justify-between text-white font-semibold cursor-pointer" onclick="handleTileClick('Bayar')">
+                    <span class="flex items-center">
+                        <!-- Icon Scan/Send (Contoh: Scan) -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-scan-line mr-2">
+                            <path d="M19 5v2" />
+                            <path d="M19 17v2" />
+                            <path d="M5 17v2" />
+                            <path d="M5 5v2" />
+                            <path d="M12 18v-5" />
+                            <path d="M12 13V6" />
+                        </svg>
+                        Bayar
+                    </span>
+                    <!-- Arrow Right Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right">
+                        <path d="m9 18 6-6-6-6" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- 4 ACTION TILES -->
+            <div class="grid grid-cols-2 gap-4">
+                <!-- Tile 1: Add Money -->
+                <button class="action-tile p-5 rounded-2xl text-center flex flex-col items-center" onclick="handleTileClick('Tambah Wang')">
+                    <div class="p-3 mb-2 rounded-full bg-teal-600/20 text-teal-400">
+                        <!-- Icon Wallet/Plus Circle -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-wallet">
+                            <path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-1a2 2 0 0 0 0 4h2a1 1 0 0 0 1-1v-2.5S20 7 19 7z" />
+                            <path d="M10 12h.01" />
+                        </svg>
+                    </div>
+                    <span class="text-sm font-semibold text-white mt-1">Add Money</span>
+                </button>
+
+                <!-- Tile 2: Transfer -->
+                <button class="action-tile p-5 rounded-2xl text-center flex flex-col items-center" onclick="handleTileClick('Pindah')">
+                    <div class="p-3 mb-2 rounded-full bg-teal-600/20 text-teal-400">
+                        <!-- Icon Transfer -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right-left">
+                            <path d="M8 3H3v5" />
+                            <path d="M3 3l5 5" />
+                            <path d="M16 21h5v-5" />
+                            <path d="M21 21l-5-5" />
+                            <path d="M10.83 15.83a4 4 0 1 0 0-7.66L3 3" />
+                            <path d="M13.17 8.17a4 4 0 1 0 0 7.66L21 21" />
+                        </svg>
+                    </div>
+                    <span class="text-sm font-semibold text-white mt-1">Transfer</span>
+                </button>
+
+                <!-- Tile 3: Activate -->
+                <button class="action-tile p-5 rounded-2xl text-center flex flex-col items-center" onclick="handleTileClick('Aktifkan')">
+                    <div class="p-3 mb-2 rounded-full bg-teal-600/20 text-teal-400">
+                        <!-- Icon Zap/Activate -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-zap">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                        </svg>
+                    </div>
+                    <span class="text-sm font-semibold text-white mt-1">Activate</span>
+                </button>
+
+                <!-- Tile 4: My Account -->
+                <button class="action-tile p-5 rounded-2xl text-center flex flex-col items-center" onclick="handleTileClick('Akaun Saya')">
+                    <div class="p-3 mb-2 rounded-full bg-teal-600/20 text-teal-400">
+                        <!-- Icon User -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user">
+                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg>
+                    </div>
+                    <span class="text-sm font-semibold text-white mt-1">My Account</span>
+                </button>
+            </div>
+
+        </main>
+    </div>
+
+    <script type="module">
+        import {
+            initializeApp
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import {
+            getAuth,
+            onAuthStateChanged,
+            signOut
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import {
+            getFirestore,
+            doc,
+            getDoc
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBpIKSxSnYfvBQia3rlOseBtnSVqThX18c",
+            authDomain: "superblyns.firebaseapp.com",
+            projectId: "superblyns",
+            storageBucket: "superblyns.appspot.com",
+            messagingSenderId: "1089867637612",
+            appId: "1:1089867637612:web:551d76367b4cfbb6fd4949"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const balanceSpan = document.getElementById('currentBalance');
+        const accountNumberShown = document.getElementById('accountNumberShown');
+        const accountNumberHidden = document.getElementById('accountNumberHidden');
+        const welcomeName = document.querySelector('main h1');
+        const payRect = document.querySelector('.pay-rect');
+        const actionTiles = document.querySelectorAll('.action-tile');
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                // Kalau tak login, redirect ke login page
+                window.location.href = "https://blynsbank.github.io/logmasuk/";
+                return;
+            }
+
+            const ref = doc(db, "users", user.uid);
+            const snap = await getDoc(ref);
+
+            if (!snap.exists()) {
+                alert("Data pengguna tidak ditemui!");
+                await signOut(auth);
+                window.location.href = "https://blynsbank.github.io/logmasuk/";
+                return;
+            }
+
+            const userData = snap.data();
+            const activated = userData.activated || false;
+
+            // Set nama user
+            welcomeName.textContent = userData.fullname || "Pengguna";
+
+            // Set balance & card
+            if (activated) {
+                balanceSpan.textContent = userData.balance || "0000";
+                accountNumberShown.textContent = userData.cardNumb || "0000";
+                accountNumberHidden.textContent = "*** **** **** XXXX";
+            } else {
+                balanceSpan.textContent = "0000";
+                accountNumberShown.textContent = "Akaun anda belum didaftar";
+                accountNumberHidden.textContent = "Akaun anda belum didaftar";
+
+                // Disable tiles kecuali logout
+                payRect.classList.add('opacity-50', 'cursor-not-allowed');
+                actionTiles.forEach(tile => {
+                    tile.classList.add('opacity-50', 'cursor-not-allowed');
+                    tile.onclick = () => alert("Akaun belum aktif. Tile ini tidak boleh digunakan.");
+                });
+            }
+        });
+
+        // Fungsi toggle balance
+        const btnToggleBalance = document.getElementById('btnToggleBalance');
+        let isBalanceHidden = false;
+        btnToggleBalance?.addEventListener('click', () => {
+            isBalanceHidden = !isBalanceHidden;
+            if (isBalanceHidden) {
+                balanceSpan.textContent = "XXXXX.XX";
+                accountNumberShown.classList.add('hidden');
+                accountNumberHidden.classList.remove('hidden');
+            } else {
+                balanceSpan.textContent = balanceSpan.textContent === "0000" ? "0000" : balanceSpan.textContent;
+                accountNumberShown.classList.remove('hidden');
+                accountNumberHidden.classList.add('hidden');
+            }
+        });
+
+        // Fungsi handle tiles
+        window.handleTileClick = (actionName) => {
+            const isInactive = payRect.classList.contains('cursor-not-allowed');
+            if (isInactive) {
+                alert("Akaun belum aktif. Tile ini tidak boleh digunakan.");
+                return;
+            }
+
+            let targetUrl = "https://www.google.com";
+            switch (actionName) {
+                case 'Bayar':
+                    targetUrl = "https://www.google.com/search?q=pembayaran+bank+online";
+                    break;
+                case 'TambahWang':
+                    targetUrl = "https://www.google.com/search?q=tambah+wang+bank";
+                    break;
+                case 'PindahDana':
+                    targetUrl = "https://www.google.com/search?q=pindah+dana+bank";
+                    break;
+                case 'AktifkanKad':
+                    targetUrl = "https://www.google.com/search?q=aktifkan+akaun+bank";
+                    break;
+                case 'TetapanAkaun':
+                    targetUrl = "https://www.google.com/search?q=tetapan+akaun+bank";
+                    break;
+            }
+            window.location.href = targetUrl;
+        }
+
+        // Fungsi handle logout
+        window.handleLogout = async () => {
+            await signOut(auth);
+            window.location.href = "https://blynsbank.github.io/logmasuk/";
+        }
+    </script>
+
+
+</body>
+
+</html>
