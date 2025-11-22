@@ -320,7 +320,7 @@
         // 3. Handle Tile Clicks
         // ==========================================================
         window.handleTileClick = (actionName) => {
-            const blockedTiles = ["Bayar", "Add Money", "Transfer"];
+            const blockedTiles = ["Bayar", "Tambah Wang", "Pindah"];
             if (!activated && blockedTiles.includes(actionName)) {
                 alert("Akaun belum aktif. Tile ini tidak boleh digunakan.");
                 return;
@@ -332,21 +332,23 @@
                 case 'Bayar':
                     targetUrl = "https://blynsbank.github.io/bayar/";
                     break;
-                case 'Add Money':
+                case 'Tambah Wang':
                     targetUrl = "https://blynsbank.github.io/tambahwang/";
                     break;
-                case 'Transfer':
+                case 'Pindah':
                     targetUrl = "https://blynsbank.github.io/pindahwang/";
                     break;
-                case 'Activate':
+                case 'Aktifkan':
                     targetUrl = "https://blynsbank.github.io/aktivasi/";
                     break;
                 case 'Akaun Saya':
                     targetUrl = "https://blynsbank.github.io/akaunsaya/";
                     break;
             }
+
             window.location.href = targetUrl;
         };
+
 
         // ==========================================================
         // 4. LOGOUT — clear pinSuccess + logout Firebase
