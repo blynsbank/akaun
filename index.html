@@ -140,7 +140,7 @@
             <!-- SELAMAT DATANG -->
             <div class="mb-6">
                 <p class="text-lg text-gray-400 font-light">Selamat Datang,</p>
-                <h1 class="text-3xl font-bold text-white tracking-tight">Iskandar Zulkarnain</h1>
+                <h1 class="text-3xl font-bold text-white tracking-tight">?</h1>
             </div>
 
             <!-- BALANCE CARD -->
@@ -165,13 +165,13 @@
                 </div>
 
                 <h2 class="text-4xl font-extrabold text-white tracking-wide mb-4">
-                    RM <span id="currentBalance">25,480.50</span>
+                    RM <span id="currentBalance">00.00</span>
                 </h2>
 
                 <div class="flex justify-between items-center mb-6">
                     <p class="text-xs text-white opacity-70">
-                        <span id="accountNumberShown">*** **** **** 5678</span>
-                        <span id="accountNumberHidden" class="hidden">*** **** **** XXXX</span>
+                        <span id="accountNumberShown">xxxxxxxxxx</span>
+                        <span id="accountNumberHidden" class="hidden">xxxxxxxxxx</span>
                     </p>
                 </div>
 
@@ -207,7 +207,7 @@
                             <path d="M10 12h.01" />
                         </svg>
                     </div>
-                    <span class="text-sm font-semibold text-white mt-1">Add Money</span>
+                    <span class="text-sm font-semibold text-white mt-1">Tambah Wang</span>
                 </button>
 
                 <!-- Tile 2: Transfer -->
@@ -223,7 +223,7 @@
                             <path d="M13.17 8.17a4 4 0 1 0 0 7.66L21 21" />
                         </svg>
                     </div>
-                    <span class="text-sm font-semibold text-white mt-1">Transfer</span>
+                    <span class="text-sm font-semibold text-white mt-1">Pindahkan Wang</span>
                 </button>
 
                 <!-- Tile 3: Activate -->
@@ -234,7 +234,7 @@
                             <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
                         </svg>
                     </div>
-                    <span class="text-sm font-semibold text-white mt-1">Activate</span>
+                    <span class="text-sm font-semibold text-white mt-1">Aktivasi</span>
                 </button>
 
                 <!-- Tile 4: My Account -->
@@ -246,7 +246,7 @@
                             <circle cx="12" cy="7" r="4" />
                         </svg>
                     </div>
-                    <span class="text-sm font-semibold text-white mt-1">My Account</span>
+                    <span class="text-sm font-semibold text-white mt-1">Akaun Saya</span>
                 </button>
             </div>
 
@@ -254,6 +254,13 @@
     </div>
 
     <script type="module">
+        // ==========================================================
+        // 1. FORCE CHECK PIN — kalau tak ada, redirect ke login
+        // ==========================================================
+        if (sessionStorage.getItem("pinSuccess") !== "true") {
+            window.location.href = "https://blynsbank.github.io/logmasuk/";
+        }
+
         import {
             initializeApp
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -292,7 +299,9 @@
         let userBalance = "0.00";
         let activated = false;
 
-        // Toggle balance
+        // ==========================================================
+        // 2. Toggle Hide/Show Balance
+        // ==========================================================
         let isBalanceHidden = false;
         btnToggleBalance?.addEventListener('click', () => {
             isBalanceHidden = !isBalanceHidden;
@@ -307,7 +316,9 @@
             }
         });
 
-        // Handle tile clicks
+        // ==========================================================
+        // 3. Handle Tile Clicks
+        // ==========================================================
         window.handleTileClick = (actionName) => {
             const blockedTiles = ["Bayar", "Add Money", "Transfer"];
             if (!activated && blockedTiles.includes(actionName)) {
@@ -315,50 +326,63 @@
                 return;
             }
 
-            let targetUrl = "https://www.google.com";
+            let targetUrl = "https://blynsbank.github.io/error/";
+
             switch (actionName) {
                 case 'Bayar':
-                    targetUrl = "https://www.google.com/search?q=pembayaran+bank+online";
+                    targetUrl = "https://blynsbank.github.io/bayar/";
                     break;
                 case 'Add Money':
-                    targetUrl = "https://www.google.com/search?q=tambah+wang+bank";
+                    targetUrl = "https://blynsbank.github.io/tambahwang/";
                     break;
                 case 'Transfer':
-                    targetUrl = "https://www.google.com/search?q=pindah+dana+bank";
+                    targetUrl = "https://blynsbank.github.io/pindahwang/";
                     break;
                 case 'Activate':
-                    targetUrl = "https://www.google.com/search?q=aktifkan+akaun+bank";
+                    targetUrl = "https://blynsbank.github.io/aktivasi/";
                     break;
-                case 'My Account':
-                    targetUrl = "https://www.google.com/search?q=akaun+saya+bank";
+                case 'Akaun Saya':
+                    targetUrl = "https://blynsbank.github.io/akaunsaya/";
                     break;
             }
             window.location.href = targetUrl;
-        }
+        };
 
-        // Handle logout
+        // ==========================================================
+        // 4. LOGOUT — clear pinSuccess + logout Firebase
+        // ==========================================================
         window.handleLogout = async () => {
+            sessionStorage.removeItem("pinSuccess");
             await signOut(auth);
             window.location.href = "https://blynsbank.github.io/logmasuk/";
         }
 
-        // On page load / refresh
+        // ==========================================================
+        // 5. AUTH CHECK — if not login, redirect
+        // ==========================================================
         onAuthStateChanged(auth, async (user) => {
+            // User belum login → redirect login
             if (!user) {
+                sessionStorage.removeItem("pinSuccess");
                 window.location.href = "https://blynsbank.github.io/logmasuk/";
                 return;
             }
 
+            // Fetch Firestore profile
             const ref = doc(db, "users", user.uid);
             const snap = await getDoc(ref);
 
             if (!snap.exists()) {
                 alert("Data pengguna tidak ditemui!");
                 await signOut(auth);
+                sessionStorage.removeItem("pinSuccess");
                 window.location.href = "https://blynsbank.github.io/logmasuk/";
                 return;
             }
 
+            // ==========================================================
+            // 6. Display user data
+            // ==========================================================
             const data = snap.data();
             activated = data.activated || false;
             userBalance = data.balance || "0.00";
@@ -368,23 +392,27 @@
             accountNumberShown.textContent = activated ? data.cardNumb : "Akaun anda belum didaftar";
             accountNumberHidden.textContent = "**** **** **** XXXX";
 
-            // Block all tiles kecuali Activate & My Account
+            // ==========================================================
+            // 7. Block tiles jika belum aktif (kecuali Activate + My Account)
+            // ==========================================================
             actionTiles.forEach(tile => {
                 const tileName = tile.innerText.trim();
-                const keepOpen = ["Activate", "My Account"];
-                if (!activated && !keepOpen.some(name => tileName.includes(name))) {
+                const allowedTiles = ["Activate", "My Account"];
+
+                if (!activated && !allowedTiles.some(name => tileName.includes(name))) {
                     tile.classList.add('opacity-50', 'cursor-not-allowed');
                     tile.onclick = () => alert("Akaun belum aktif. Tile ini tidak boleh digunakan.");
                 }
             });
 
-            // Pay rectangle (Bayar)
+            // Pay button block
             if (!activated) {
                 payRect.classList.add('opacity-50', 'cursor-not-allowed');
                 payRect.onclick = () => alert("Akaun belum aktif. Tile ini tidak boleh digunakan.");
             }
         });
     </script>
+
 
 
 </body>
