@@ -439,6 +439,8 @@
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
     <script type="module">
         import {
             initializeApp
@@ -483,7 +485,7 @@
 
         let userBalance = "0.00";
         let activated = false;
-        let savedPin = null;
+        let savedPinHash = null;
         let attempt = 0;
         let isBalanceHidden = false;
 
@@ -494,6 +496,11 @@
             const len = overlayPinInput.value.length;
             overlayPinDots.forEach((dot, i) => dot.classList.toggle('active', i < len));
             overlayEnter.disabled = len !== 6;
+        }
+
+        function overlayDotsReset() {
+            overlayPinDots.forEach(dot => dot.classList.remove("active", "error"));
+            overlayEnter.disabled = true;
         }
 
         // -------------------------
@@ -538,14 +545,12 @@
                 "Pindah": "https://blynsbank.github.io/pindahwang/",
                 "Aktifkan": "https://blynsbank.github.io/aktivasi/",
                 "Akaun Saya": "https://blynsbank.github.io/akaunsaya/"
-            };
+            }
 
             window.location.href = urls[actionName] || "https://blynsbank.github.io/error/";
         };
 
-        // -------------------------
         // Toggle balance hide/show
-        // -------------------------
         btnToggleBalance?.addEventListener('click', () => {
             isBalanceHidden = !isBalanceHidden;
             balanceSpan.textContent = isBalanceHidden ? "XXXXX.XX" : activated ? userBalance : "0000";
@@ -555,7 +560,6 @@
             document.getElementById('iconEyeOff').classList.toggle('hidden', !isBalanceHidden);
         });
 
-
         // -------------------------
         // Auth + Data Fetch + PIN Overlay
         // -------------------------
@@ -564,7 +568,6 @@
                 window.location.href = "https://blynsbank.github.io/logmasuk/";
                 return;
             }
-
             try {
                 const ref = doc(db, "users", user.uid);
                 const snap = await getDoc(ref);
@@ -576,22 +579,8 @@
                 }
 
                 const data = snap.data();
-                activated = data.activated || false;
-                userBalance = data.balance || "0.00";
-                savedPin = data.pin || null;
+                savedPinHash = data.pin || null;
 
-                welcomeName.textContent = data.fullname || "Pengguna";
-                balanceSpan.textContent = activated ? userBalance : "0000";
-                accountNumberShown.textContent = activated ? data.cardNumb : "Akaun anda belum didaftar";
-                accountNumberHidden.textContent = "**** **** **** XXXX";
-
-                // Pay button state
-                if (!activated) {
-                    payRect.classList.add('opacity-50', 'cursor-not-allowed');
-                    payRect.onclick = () => alert("Akaun belum aktif. Tile ini tidak boleh digunakan.");
-                }
-
-                // Show PIN overlay jika session PIN belum verified
                 if (sessionStorage.getItem("pinSuccess") !== "true") {
                     pinOverlay.classList.remove("hidden");
                 }
@@ -606,22 +595,32 @@
         // PIN ENTER
         // -------------------------
         overlayEnter.addEventListener("click", () => {
-            if (overlayPinInput.value === savedPin) {
+            if (!savedPinHash) {
+                alert("PIN belum didaftarkan di server.");
+                return;
+            }
+
+            const inputHash = CryptoJS.SHA256(overlayPinInput.value).toString();
+
+            if (inputHash === savedPinHash) {
                 sessionStorage.setItem("pinSuccess", "true");
                 pinOverlay.classList.add("hidden");
+                overlayPinInput.value = "";
+                overlayDotsReset();
+                attempt = 0;
             } else {
                 attempt++;
                 overlayPinInput.value = "";
                 overlayPinDots.forEach(dot => dot.classList.add("error"));
                 setTimeout(() => overlayPinDots.forEach(dot => dot.classList.remove("error")), 300);
                 updateDots();
-                if (attempt >= 5) handleLogout();
-                else alert("PIN salah!");
-            }
 
-            if (attempt >= 5) {
-                alert("Gagal 5 kali. Anda akan dilog keluar.");
-                handleLogout();
+                if (attempt >= 5) {
+                    alert("Gagal 5 kali. Anda akan dilog keluar.");
+                    handleLogout();
+                } else {
+                    alert(`PIN salah! Percubaan ${attempt}/5`);
+                }
             }
         });
     </script>
