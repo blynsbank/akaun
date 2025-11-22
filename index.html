@@ -417,7 +417,7 @@
 
                 <input type="password" id="overlayPinInput" maxlength="6" class="hidden">
 
-                <div class="grid grid-cols-3 gap-6">
+                <div class="grid grid-cols-3 gap-0">
                     <button type="button" class="numpad-btn" data-key="1">1</button>
                     <button type="button" class="numpad-btn" data-key="2">2</button>
                     <button type="button" class="numpad-btn" data-key="3">3</button>
@@ -430,11 +430,8 @@
                     <div class="numpad-btn numpad-action-btn opacity-0 pointer-events-none"></div>
                     <button type="button" class="numpad-btn" data-key="0">0</button>
                     <button type="button" id="overlayDelete" class="numpad-btn numpad-action-btn">X</button>
+                    <button type="button" id="overlayEnter" class="numpad-btn numpad-action-btn disabled:opacity-30 disabled:cursor-not-allowed" disabled>✓</button>
                 </div>
-
-                <button id="overlayEnter" disabled class="mt-6 w-full py-3 rounded-xl border-2 border-teal-400 text-teal-400 font-semibold disabled:opacity-30 disabled:cursor-not-allowed">
-                    Masuk
-                </button>
             </div>
         </div>
     </div>
@@ -595,32 +592,23 @@
         // PIN ENTER
         // -------------------------
         overlayEnter.addEventListener("click", () => {
-            if (!savedPinHash) {
-                alert("PIN belum didaftarkan di server.");
-                return;
-            }
+            if (!savedPinHash) return; // kalau PIN server tak ada, ignore
 
             const inputHash = CryptoJS.SHA256(overlayPinInput.value).toString();
 
             if (inputHash === savedPinHash) {
+                // PIN betul → terus hide overlay
                 sessionStorage.setItem("pinSuccess", "true");
                 pinOverlay.classList.add("hidden");
                 overlayPinInput.value = "";
                 overlayDotsReset();
                 attempt = 0;
             } else {
-                attempt++;
+                // PIN salah → kosongkan input & reset dots
                 overlayPinInput.value = "";
-                overlayPinDots.forEach(dot => dot.classList.add("error"));
-                setTimeout(() => overlayPinDots.forEach(dot => dot.classList.remove("error")), 300);
-                updateDots();
-
-                if (attempt >= 5) {
-                    alert("Gagal 5 kali. Anda akan dilog keluar.");
-                    handleLogout();
-                } else {
-                    alert(`PIN salah! Percubaan ${attempt}/5`);
-                }
+                overlayDotsReset();
+                attempt++;
+                if (attempt >= 5) handleLogout(); // optional kalau nak limit percubaan
             }
         });
     </script>
