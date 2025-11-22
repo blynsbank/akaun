@@ -254,13 +254,6 @@
     </div>
 
     <script type="module">
-        // ==========================================================
-        // 1. FORCE CHECK PIN — kalau tak ada, redirect ke login
-        // ==========================================================
-        if (sessionStorage.getItem("pinSuccess") !== "true") {
-            window.location.href = "https://blynsbank.github.io/logmasuk/";
-        }
-
         import {
             initializeApp
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -275,6 +268,9 @@
             getDoc
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
+        // ==========================================================
+        // Firebase Config
+        // ==========================================================
         const firebaseConfig = {
             apiKey: "AIzaSyBpIKSxSnYfvBQia3rlOseBtnSVqThX18c",
             authDomain: "superblyns.firebaseapp.com",
@@ -283,11 +279,13 @@
             messagingSenderId: "1089867637612",
             appId: "1:1089867637612:web:551d76367b4cfbb6fd4949"
         };
-
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        // ==========================================================
+        // DOM Elements
+        // ==========================================================
         const balanceSpan = document.getElementById('currentBalance');
         const accountNumberShown = document.getElementById('accountNumberShown');
         const accountNumberHidden = document.getElementById('accountNumberHidden');
@@ -296,13 +294,23 @@
         const actionTiles = document.querySelectorAll('.action-tile');
         const btnToggleBalance = document.getElementById('btnToggleBalance');
 
+        // ==========================================================
+        // Variables
+        // ==========================================================
         let userBalance = "0.00";
         let activated = false;
+        let isBalanceHidden = false;
+
+        // ==========================================================
+        // 1. FORCE CHECK PIN — kalau tak ada, redirect ke login
+        // ==========================================================
+        if (sessionStorage.getItem("pinSuccess") !== "true") {
+            window.location.href = "https://blynsbank.github.io/logmasuk/";
+        }
 
         // ==========================================================
         // 2. Toggle Hide/Show Balance
         // ==========================================================
-        let isBalanceHidden = false;
         btnToggleBalance?.addEventListener('click', () => {
             isBalanceHidden = !isBalanceHidden;
             if (isBalanceHidden) {
@@ -327,7 +335,6 @@
             }
 
             let targetUrl = "https://blynsbank.github.io/error/";
-
             switch (actionName) {
                 case 'Bayar':
                     targetUrl = "https://blynsbank.github.io/bayar/";
@@ -349,42 +356,35 @@
             window.location.href = targetUrl;
         };
 
-
         // ==========================================================
-        // 4. LOGOUT — clear pinSuccess + logout Firebase
+        // 4. Logout
         // ==========================================================
         window.handleLogout = async () => {
             sessionStorage.removeItem("pinSuccess");
             await signOut(auth);
             window.location.href = "https://blynsbank.github.io/logmasuk/";
-        }
+        };
 
         // ==========================================================
-        // 5. AUTH CHECK — if not login, redirect
+        // 5. Auth Check & Fetch User Data
         // ==========================================================
         onAuthStateChanged(auth, async (user) => {
-            // User belum login → redirect login
             if (!user) {
                 sessionStorage.removeItem("pinSuccess");
                 window.location.href = "https://blynsbank.github.io/logmasuk/";
                 return;
             }
 
-            // Fetch Firestore profile
             const ref = doc(db, "users", user.uid);
             const snap = await getDoc(ref);
 
             if (!snap.exists()) {
-                alert("Data pengguna tidak ditemui!");
                 await signOut(auth);
                 sessionStorage.removeItem("pinSuccess");
                 window.location.href = "https://blynsbank.github.io/logmasuk/";
                 return;
             }
 
-            // ==========================================================
-            // 6. Display user data
-            // ==========================================================
             const data = snap.data();
             activated = data.activated || false;
             userBalance = data.balance || "0.00";
@@ -394,26 +394,14 @@
             accountNumberShown.textContent = activated ? data.cardNumb : "Akaun anda belum didaftar";
             accountNumberHidden.textContent = "**** **** **** XXXX";
 
-            // ==========================================================
-            // 7. Block tiles jika belum aktif (kecuali Activate + My Account)
-            // ==========================================================
-            actionTiles.forEach(tile => {
-                const tileName = tile.innerText.trim();
-                const allowedTiles = ["Activate", "My Account"];
-
-                if (!activated && !allowedTiles.some(name => tileName.includes(name))) {
-                    tile.classList.add('opacity-50', 'cursor-not-allowed');
-                    tile.onclick = () => alert("Akaun belum aktif. Tile ini tidak boleh digunakan.");
-                }
-            });
-
-            // Pay button block
+            // Pay button active only if activated
             if (!activated) {
                 payRect.classList.add('opacity-50', 'cursor-not-allowed');
                 payRect.onclick = () => alert("Akaun belum aktif. Tile ini tidak boleh digunakan.");
             }
         });
     </script>
+
 
 
 
