@@ -110,6 +110,148 @@
             border: 1px solid rgba(255, 255, 255, 0.3);
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
+
+        /* PIN Overlay Fullscreen */
+        #pinOverlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Dots */
+        .pin-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid #4b5563;
+            margin: 0 8px;
+            transition: .2s;
+        }
+
+        .pin-dot.active {
+            background: #2dd4bf;
+            border-color: #2dd4bf;
+            box-shadow: 0 0 8px #2dd4bf;
+        }
+
+        .pin-dot.error {
+            border-color: #ef4444;
+            box-shadow: 0 0 10px red;
+            animation: shake .3s;
+        }
+
+        /* Shake animation */
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-6px);
+            }
+
+            75% {
+                transform: translateX(6px);
+            }
+        }
+
+        /* Numpad */
+        .numpad-btn {
+            width: 80px;
+            height: 80px;
+            border-radius: 999px;
+            background: #1f2937;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            color: white;
+            margin: 10px;
+            cursor: pointer;
+            user-select: none;
+            transition: .1s;
+        }
+
+        .numpad-btn:active {
+            transform: scale(.9);
+            background: #374151;
+        }
+
+        /* Butang enter */
+        #pinEnterBtn {
+            margin-top: 20px;
+            padding: 12px 0;
+            width: 90%;
+            background: transparent;
+            border: 2px solid #2dd4bf;
+            color: #2dd4bf;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            transition: .3s;
+        }
+
+        #pinEnterBtn:disabled {
+            opacity: .3;
+        }
+
+        #pinEnterBtn:not(:disabled):hover {
+            background: rgba(45, 212, 191, 0.1);
+            box-shadow: 0 0 10px #2dd4bf;
+        }
+
+        /* GLOBAL BUTTON STYLING */
+        button {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 10px 16px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 500;
+            transition: .2s;
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(45, 212, 191, 0.2);
+        }
+
+        button:active {
+            transform: scale(.97);
+        }
+
+        /* Override Tailwind default + cantikkan button */
+        .btn-primary {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 12px 18px;
+            border-radius: 16px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.25s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .btn-primary:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(45, 212, 191, 0.25);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.96);
+            box-shadow: 0 0 12px rgba(45, 212, 191, 0.3);
+        }
     </style>
 </head>
 
@@ -251,6 +393,50 @@
             </div>
 
         </main>
+        <!-- Masukkan terus dalam <body> selepas .app-container -->
+        <div id="pinOverlay" class="fixed inset-0 z-50 bg-black/95 flex flex-col items-center justify-center p-6 hidden">
+            <div class="w-full max-w-xs flex flex-col items-center">
+                <!-- Lock Icon -->
+                <div class="mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                    </svg>
+                </div>
+                <h2 class="text-xl font-medium text-white mb-8">Masukkan 6 Digit PIN</h2>
+
+                <!-- 6 PIN DOTS -->
+                <div class="flex gap-6 mb-8" id="overlayPinDots">
+                    <div class="pin-dot"></div>
+                    <div class="pin-dot"></div>
+                    <div class="pin-dot"></div>
+                    <div class="pin-dot"></div>
+                    <div class="pin-dot"></div>
+                    <div class="pin-dot"></div>
+                </div>
+
+                <input type="password" id="overlayPinInput" maxlength="6" class="hidden">
+
+                <div class="grid grid-cols-3 gap-6">
+                    <button type="button" class="numpad-btn" data-key="1">1</button>
+                    <button type="button" class="numpad-btn" data-key="2">2</button>
+                    <button type="button" class="numpad-btn" data-key="3">3</button>
+                    <button type="button" class="numpad-btn" data-key="4">4</button>
+                    <button type="button" class="numpad-btn" data-key="5">5</button>
+                    <button type="button" class="numpad-btn" data-key="6">6</button>
+                    <button type="button" class="numpad-btn" data-key="7">7</button>
+                    <button type="button" class="numpad-btn" data-key="8">8</button>
+                    <button type="button" class="numpad-btn" data-key="9">9</button>
+                    <div class="numpad-btn numpad-action-btn opacity-0 pointer-events-none"></div>
+                    <button type="button" class="numpad-btn" data-key="0">0</button>
+                    <button type="button" id="overlayDelete" class="numpad-btn numpad-action-btn">X</button>
+                </div>
+
+                <button id="overlayEnter" disabled class="mt-6 w-full py-3 rounded-xl border-2 border-teal-400 text-teal-400 font-semibold disabled:opacity-30 disabled:cursor-not-allowed">
+                    Masuk
+                </button>
+            </div>
+        </div>
     </div>
 
     <script type="module">
@@ -268,9 +454,6 @@
             getDoc
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // ==========================================================
-        // Firebase Config
-        // ==========================================================
         const firebaseConfig = {
             apiKey: "AIzaSyBpIKSxSnYfvBQia3rlOseBtnSVqThX18c",
             authDomain: "superblyns.firebaseapp.com",
@@ -279,13 +462,18 @@
             messagingSenderId: "1089867637612",
             appId: "1:1089867637612:web:551d76367b4cfbb6fd4949"
         };
+
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // ==========================================================
         // DOM Elements
-        // ==========================================================
+        const pinOverlay = document.getElementById("pinOverlay");
+        const overlayPinInput = document.getElementById("overlayPinInput");
+        const overlayPinDots = document.querySelectorAll(".pin-dot");
+        const overlayEnter = document.getElementById("overlayEnter");
+        const numpadButtons = document.querySelectorAll(".numpad-btn");
+        const overlayDelete = document.getElementById("overlayDelete");
         const balanceSpan = document.getElementById('currentBalance');
         const accountNumberShown = document.getElementById('accountNumberShown');
         const accountNumberHidden = document.getElementById('accountNumberHidden');
@@ -293,32 +481,50 @@
         const payRect = document.querySelector('.pay-rect');
         const btnToggleBalance = document.getElementById('btnToggleBalance');
 
-        // ==========================================================
-        // Variables
-        // ==========================================================
         let userBalance = "0.00";
         let activated = false;
+        let savedPin = null;
+        let attempt = 0;
         let isBalanceHidden = false;
 
-        // ==========================================================
-        // Toggle Hide/Show Balance
-        // ==========================================================
-        btnToggleBalance?.addEventListener('click', () => {
-            isBalanceHidden = !isBalanceHidden;
-            if (isBalanceHidden) {
-                balanceSpan.textContent = "XXXXX.XX";
-                accountNumberShown.classList.add('hidden');
-                accountNumberHidden.classList.remove('hidden');
-            } else {
-                balanceSpan.textContent = activated ? userBalance : "0000";
-                accountNumberShown.classList.remove('hidden');
-                accountNumberHidden.classList.add('hidden');
-            }
+        // -------------------------
+        // Helper: update PIN dots
+        // -------------------------
+        function updateDots() {
+            const len = overlayPinInput.value.length;
+            overlayPinDots.forEach((dot, i) => dot.classList.toggle('active', i < len));
+            overlayEnter.disabled = len !== 6;
+        }
+
+        // -------------------------
+        // Numpad input
+        // -------------------------
+        numpadButtons.forEach(btn => {
+            btn.addEventListener("click", () => {
+                const key = btn.dataset.key;
+                if (!key) return;
+                if (overlayPinInput.value.length < 6) {
+                    overlayPinInput.value += key;
+                    updateDots();
+                }
+            });
         });
 
-        // ==========================================================
-        // Handle Tile Clicks
-        // ==========================================================
+        // Delete
+        overlayDelete.addEventListener("click", () => {
+            overlayPinInput.value = overlayPinInput.value.slice(0, -1);
+            updateDots();
+        });
+
+        // Logout
+        async function handleLogout() {
+            sessionStorage.removeItem("pinSuccess");
+            await signOut(auth);
+            window.location.href = "https://blynsbank.github.io/logmasuk/";
+        }
+        window.handleLogout = handleLogout;
+
+        // Tile click handler
         window.handleTileClick = (actionName) => {
             const blockedTiles = ["Bayar", "Tambah Wang", "Pindah"];
             if (!activated && blockedTiles.includes(actionName)) {
@@ -326,43 +532,35 @@
                 return;
             }
 
-            let targetUrl = "https://blynsbank.github.io/error/";
-            switch (actionName) {
-                case 'Bayar':
-                    targetUrl = "https://blynsbank.github.io/bayar/";
-                    break;
-                case 'Tambah Wang':
-                    targetUrl = "https://blynsbank.github.io/tambahwang/";
-                    break;
-                case 'Pindah':
-                    targetUrl = "https://blynsbank.github.io/pindahwang/";
-                    break;
-                case 'Aktifkan':
-                    targetUrl = "https://blynsbank.github.io/aktivasi/";
-                    break;
-                case 'Akaun Saya':
-                    targetUrl = "https://blynsbank.github.io/akaunsaya/";
-                    break;
-            }
+            let urls = {
+                "Bayar": "https://blynsbank.github.io/bayar/",
+                "Tambah Wang": "https://blynsbank.github.io/tambahwang/",
+                "Pindah": "https://blynsbank.github.io/pindahwang/",
+                "Aktifkan": "https://blynsbank.github.io/aktivasi/",
+                "Akaun Saya": "https://blynsbank.github.io/akaunsaya/"
+            };
 
-            window.location.href = targetUrl;
+            window.location.href = urls[actionName] || "https://blynsbank.github.io/error/";
         };
 
-        // ==========================================================
-        // Logout
-        // ==========================================================
-        window.handleLogout = async () => {
-            sessionStorage.removeItem("pinSuccess");
-            await signOut(auth);
-            window.location.href = "https://blynsbank.github.io/logmasuk/";
-        };
+        // -------------------------
+        // Toggle balance hide/show
+        // -------------------------
+        btnToggleBalance?.addEventListener('click', () => {
+            isBalanceHidden = !isBalanceHidden;
+            balanceSpan.textContent = isBalanceHidden ? "XXXXX.XX" : activated ? userBalance : "0000";
+            accountNumberShown.classList.toggle('hidden', isBalanceHidden);
+            accountNumberHidden.classList.toggle('hidden', !isBalanceHidden);
+            document.getElementById('iconEye').classList.toggle('hidden', isBalanceHidden);
+            document.getElementById('iconEyeOff').classList.toggle('hidden', !isBalanceHidden);
+        });
 
-        // ==========================================================
-        // Auth Check & Fetch User Data (NO LOOP)
-        // ==========================================================
+
+        // -------------------------
+        // Auth + Data Fetch + PIN Overlay
+        // -------------------------
         onAuthStateChanged(auth, async (user) => {
             if (!user) {
-                // redirect sekali sahaja
                 window.location.href = "https://blynsbank.github.io/logmasuk/";
                 return;
             }
@@ -380,30 +578,54 @@
                 const data = snap.data();
                 activated = data.activated || false;
                 userBalance = data.balance || "0.00";
+                savedPin = data.pin || null;
 
                 welcomeName.textContent = data.fullname || "Pengguna";
                 balanceSpan.textContent = activated ? userBalance : "0000";
                 accountNumberShown.textContent = activated ? data.cardNumb : "Akaun anda belum didaftar";
                 accountNumberHidden.textContent = "**** **** **** XXXX";
 
-                // Pay button active only if activated
+                // Pay button state
                 if (!activated) {
                     payRect.classList.add('opacity-50', 'cursor-not-allowed');
                     payRect.onclick = () => alert("Akaun belum aktif. Tile ini tidak boleh digunakan.");
                 }
 
+                // Show PIN overlay jika session PIN belum verified
+                if (sessionStorage.getItem("pinSuccess") !== "true") {
+                    pinOverlay.classList.remove("hidden");
+                }
+
             } catch (err) {
-                console.error("Fetch user data error:", err);
-                await signOut(auth);
-                window.location.href = "https://blynsbank.github.io/logmasuk/";
+                console.error(err);
+                await handleLogout();
             }
         });
+
+        // -------------------------
+        // PIN ENTER
+        // -------------------------
+        overlayEnter.addEventListener("click", () => {
+            if (overlayPinInput.value === savedPin) {
+                sessionStorage.setItem("pinSuccess", "true");
+                pinOverlay.classList.add("hidden");
+            } else {
+                attempt++;
+                overlayPinInput.value = "";
+                overlayPinDots.forEach(dot => dot.classList.add("error"));
+                setTimeout(() => overlayPinDots.forEach(dot => dot.classList.remove("error")), 300);
+                updateDots();
+                if (attempt >= 5) handleLogout();
+                else alert("PIN salah!");
+            }
+
+            if (attempt >= 5) {
+                alert("Gagal 5 kali. Anda akan dilog keluar.");
+                handleLogout();
+            }
+        }
+        });
     </script>
-
-
-
-
-
 </body>
 
 </html>
