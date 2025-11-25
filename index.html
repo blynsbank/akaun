@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Blyns Bank - Laman Utama</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -36,9 +36,12 @@
             color: var(--text-light);
             overflow: hidden;
             box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
         }
 
-        /* Ambient Blobs for aesthetic background */
+        /* Ambient Blobs */
         .blob {
             position: absolute;
             border-radius: 50%;
@@ -70,70 +73,119 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
         }
 
-        /* Premium Balance Card */
+        /* Animated Gradient Balance Card */
         .balance-card {
-            background: linear-gradient(145deg, #0e7490 0%, #0d9488 100%);
+            background: linear-gradient(-45deg, #0f766e, #0d9488, #115e59, #134e4a);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             box-shadow: 0 20px 40px -10px rgba(13, 148, 136, 0.5);
             position: relative;
             z-index: 10;
         }
 
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
         /* Action Tiles */
         .action-tile {
             background: var(--bg-card);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
             border: 1px solid rgba(255, 255, 255, 0.1);
             position: relative;
             overflow: hidden;
         }
 
-        .action-tile::before {
-            content: '';
+        .action-tile:active {
+            transform: scale(0.98);
+        }
+
+        /* Footer Nav */
+        .bottom-nav {
+            background: rgba(15, 15, 19, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        .nav-item {
+            color: #888;
+            transition: 0.3s;
+        }
+
+        .nav-item.active {
+            color: var(--primary-light);
+        }
+
+        /* PIN Screen Styles */
+        #pinContainer {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at center, rgba(45, 212, 191, 0.05) 0%, transparent 70%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            background: var(--bg-dark);
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
-        .action-tile:hover {
+        .pin-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid var(--primary-color);
+            transition: 0.2s;
+        }
+
+        .pin-dot.filled {
+            background: var(--primary-light);
             border-color: var(--primary-light);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(13, 148, 136, 0.3);
         }
 
-        .action-tile:hover::before {
-            opacity: 1;
-        }
-
-        /* Pay Rectangle */
-        .pay-rect {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Primary Button Style Refinement */
-        .btn-logout {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 8px 12px;
-            border-radius: 12px;
-            color: var(--text-light);
-            font-weight: 500;
-            transition: all 0.25s ease;
-        }
-
-        .btn-logout:hover {
+        .keypad-btn {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
             background: rgba(255, 255, 255, 0.1);
-            border-color: #f87171;
-            transform: scale(1.05);
-            color: #f87171;
+            font-size: 24px;
+            font-weight: 600;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .keypad-btn:active {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Scrollable Area */
+        .content-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 100px;
+            /* Space for footer */
+        }
+
+        /* Hide scrollbar */
+        .content-scroll::-webkit-scrollbar {
+            display: none;
         }
     </style>
 </head>
@@ -144,131 +196,172 @@
         <div class="blob blob-1"></div>
         <div class="blob blob-2"></div>
 
-        <!-- Sticky Header -->
-        <header class="sticky-header sticky top-0 z-20 px-6 py-4 flex items-center justify-between">
-            <!-- Logo is set to be compatible with a dark background -->
-            <img src="https://i.postimg.cc/QdHXM5RS/Blyns-Bank-Head-Logo.png" alt="Blyns Bank" class="h-10 w-auto filter brightness-110">
-            <!-- Logout Button -->
-            <button id="btnLogout" onclick="handleLogout()" class="btn-logout text-gray-400 hover:text-red-500 transition duration-150 p-2 rounded-full">
-                <!-- Lucide: LogOut -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                    <path d="M16 17l5-5-5-5" />
-                    <path d="M21 12H9" />
-                </svg>
-            </button>
-        </header>
-
-        <main class="p-6 relative z-10">
-            <!-- Welcome Section -->
-            <div class="mb-8">
-                <p class="text-md text-gray-400 font-light">Selamat Datang,</p>
-                <h1 class="text-4xl font-bold text-white tracking-tight leading-snug" id="welcomeNameDisplay">Pengguna</h1>
+        <!-- ================= PIN SCREEN (Overlay) ================= -->
+        <div id="pinContainer" class="hidden">
+            <div class="mb-8 text-center">
+                <img src="https://i.postimg.cc/QdHXM5RS/Blyns-Bank-Head-Logo.png" alt="Logo" class="h-12 w-auto mb-6 mx-auto filter brightness-110">
+                <h2 class="text-xl text-white font-semibold">Masukkan PIN Keselamatan</h2>
+                <p class="text-sm text-gray-400 mt-2">Sila sahkan identiti anda</p>
             </div>
 
-            <!-- Balance Card -->
-            <div class="balance-card p-6 rounded-3xl mb-10 transform transition duration-300">
-                <div class="flex justify-between items-center mb-1">
-                    <p class="text-white text-sm opacity-80 font-medium">Baki Semasa</p>
-                    <!-- Toggle Balance Button -->
-                    <button id="btnToggleBalance" class="text-white opacity-90 p-1 hover:opacity-100 transition focus:outline-none rounded-full" aria-label="Toggle Balance Visibility">
-                        <!-- Lucide: Eye / EyeOff -->
-                        <svg id="iconEye" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
-                            <circle cx="12" cy="12" r="3" />
-                        </svg>
-                        <svg id="iconEyeOff" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden">
-                            <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
-                            <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" />
-                            <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.78 9.78 0 0 0 5.46-1.61" />
-                            <line x1="2" x2="22" y1="2" y2="22" />
-                        </svg>
-                    </button>
-                </div>
+            <!-- PIN Dots -->
+            <div class="flex space-x-4 mb-10">
+                <div class="pin-dot" id="dot1"></div>
+                <div class="pin-dot" id="dot2"></div>
+                <div class="pin-dot" id="dot3"></div>
+                <div class="pin-dot" id="dot4"></div>
+                <div class="pin-dot" id="dot5"></div>
+                <div class="pin-dot" id="dot6"></div>
+            </div>
 
-                <h2 class="text-5xl font-extrabold text-white tracking-tight mb-4 transition-all duration-300">
-                    RM <span id="currentBalance">00.00</span>
-                </h2>
+            <p id="pinErrorMsg" class="text-red-500 text-sm mb-4 h-5"></p>
 
-                <div class="flex justify-between items-center mb-6">
-                    <p class="text-xs text-white opacity-60 font-medium">
-                        Akaun: <span id="accountNumberShown">xxxxxxxxxx</span>
-                        <span id="accountNumberHidden" class="hidden">xxxxxxxxxx</span>
-                    </p>
-                </div>
-
-                <!-- Quick Action: Bayar (Pay) -->
-                <div class="pay-rect w-full py-3 px-4 rounded-xl flex items-center justify-between text-white font-semibold cursor-pointer hover:bg-white/10 transition" onclick="handleTileClick('Bayar')">
-                    <span class="flex items-center space-x-3 text-lg">
-                        <!-- Lucide: Send -->
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="m22 2-7 20-4-9-9-4 20-7Z" />
-                            <path d="M22 2 11 13" />
-                        </svg>
-                        <span>Bayar</span>
-                    </span>
-                    <!-- Lucide: Chevron Right -->
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="m9 18 6-6-6-6" />
+            <!-- Keypad -->
+            <div class="grid grid-cols-3 gap-6">
+                <div class="keypad-btn" onclick="addPin(1)">1</div>
+                <div class="keypad-btn" onclick="addPin(2)">2</div>
+                <div class="keypad-btn" onclick="addPin(3)">3</div>
+                <div class="keypad-btn" onclick="addPin(4)">4</div>
+                <div class="keypad-btn" onclick="addPin(5)">5</div>
+                <div class="keypad-btn" onclick="addPin(6)">6</div>
+                <div class="keypad-btn" onclick="addPin(7)">7</div>
+                <div class="keypad-btn" onclick="addPin(8)">8</div>
+                <div class="keypad-btn" onclick="addPin(9)">9</div>
+                <div class="keypad-btn bg-transparent"></div>
+                <div class="keypad-btn" onclick="addPin(0)">0</div>
+                <div class="keypad-btn bg-transparent text-red-400" onclick="deletePin()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z" />
+                        <line x1="18" y1="9" x2="12" y2="15" />
+                        <line x1="12" y1="9" x2="18" y2="15" />
                     </svg>
                 </div>
             </div>
+        </div>
 
-            <!-- Main Action Grid -->
-            <div class="grid grid-cols-2 gap-4">
-                <!-- Tambah Wang (Add Money/Deposit) -->
-                <button class="action-tile p-5 rounded-2xl text-center flex flex-col items-center justify-center space-y-2 h-36" onclick="handleTileClick('Tambah Wang')">
-                    <!-- Icon: Trending Up -->
-                    <div class="p-3 rounded-full bg-teal-600/20 text-teal-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="22 7 13 16 16 19 22 19" />
-                            <path d="M8 8a3 3 0 1 0-3 3v8a2 2 0 0 0 2 2h7" />
-                        </svg>
-                    </div>
-                    <span class="text-sm font-semibold text-white pt-1">Tambah Wang</span>
+        <!-- ================= MAIN DASHBOARD ================= -->
+        <div id="dashboardContainer" class="hidden flex flex-col h-full">
+            <!-- Sticky Header -->
+            <header class="sticky-header sticky top-0 z-20 px-6 py-4 flex items-center justify-between">
+                <img src="https://i.postimg.cc/QdHXM5RS/Blyns-Bank-Head-Logo.png" alt="Blyns Bank" class="h-8 w-auto filter brightness-110">
+                <button id="btnLogout" onclick="handleLogout()" class="text-gray-400 hover:text-red-500 transition duration-150 p-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <path d="M16 17l5-5-5-5" />
+                        <path d="M21 12H9" />
+                    </svg>
                 </button>
+            </header>
 
-                <!-- Pindahkan Wang (Transfer) -->
-                <button class="action-tile p-5 rounded-2xl text-center flex flex-col items-center justify-center space-y-2 h-36" onclick="handleTileClick('Pindah')">
-                    <!-- Icon: Repeat -->
-                    <div class="p-3 rounded-full bg-teal-600/20 text-teal-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="m15 17 5-5-5-5" />
-                            <path d="M2 12h18" />
-                        </svg>
+            <!-- Scrollable Content -->
+            <div class="content-scroll p-6 relative z-10">
+                <!-- Welcome Section -->
+                <div class="mb-6 flex justify-between items-end">
+                    <div>
+                        <p class="text-sm text-gray-400 font-light">Selamat Datang,</p>
+                        <h1 class="text-2xl font-bold text-white tracking-tight" id="welcomeNameDisplay">Pengguna</h1>
                     </div>
-                    <span class="text-sm font-semibold text-white pt-1">Pindahkan Wang</span>
-                </button>
+                </div>
 
-                <!-- Aktivasi (Activation) -->
-                <button class="action-tile p-5 rounded-2xl text-center flex flex-col items-center justify-center space-y-2 h-36" onclick="handleTileClick('Aktifkan')">
-                    <!-- Icon: Key -->
-                    <div class="p-3 rounded-full bg-teal-600/20 text-teal-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M18 10c-1.33-1.66-3-2.66-5-3-2 .34-3.67 1.34-5 3v11c2.25-1.5 4.5-2.5 7-3.25" />
-                            <path d="M12 2v20" />
-                            <path d="M22 7c-3-2-7-2-10 0" />
-                        </svg>
+                <!-- Balance Card -->
+                <div class="balance-card p-6 rounded-3xl mb-8 transform transition duration-300">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <p class="text-white text-xs opacity-80 font-medium mb-1">Baki Semasa</p>
+                            <h2 class="text-4xl font-extrabold text-white tracking-tight">
+                                RM <span id="currentBalance">00.00</span>
+                            </h2>
+                        </div>
+                        <button id="btnToggleBalance" class="text-white opacity-80 hover:opacity-100 transition">
+                            <svg id="iconEye" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                                <circle cx="12" cy="12" r="3" />
+                            </svg>
+                            <svg id="iconEyeOff" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="hidden">
+                                <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
+                                <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" />
+                                <line x1="2" x2="22" y1="2" y2="22" />
+                            </svg>
+                        </button>
                     </div>
-                    <span class="text-sm font-semibold text-white pt-1">Aktivasi</span>
-                </button>
 
-                <!-- Akaun Saya (My Account) -->
-                <button class="action-tile p-5 rounded-2xl text-center flex flex-col items-center justify-center space-y-2 h-36" onclick="handleTileClick('Akaun Saya')">
-                    <!-- Icon: User -->
-                    <div class="p-3 rounded-full bg-teal-600/20 text-teal-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-                            <circle cx="12" cy="7" r="4" />
-                        </svg>
+                    <p class="text-xs text-white opacity-60 font-medium mb-6">
+                        <span id="accountNumberShown">xxxxxxxxxx</span>
+                        <span id="accountNumberHidden" class="hidden">xxxxxxxxxx</span>
+                    </p>
+
+                    <div class="flex justify-between items-center border-t border-white/20 pt-4">
+                        <span class="text-white font-bold italic text-lg tracking-wider">Blyns+</span>
+                        <button onclick="handleTileClick('Tambah Wang')" class="bg-white text-teal-700 px-4 py-1.5 rounded-full text-xs font-bold shadow-lg hover:bg-gray-100 transition transform hover:scale-105">
+                            + Tambah
+                        </button>
                     </div>
-                    <span class="text-sm font-semibold text-white pt-1">Akaun Saya</span>
-                </button>
+                </div>
+
+                <!-- Action Section -->
+                <div class="mb-4">
+                    <h3 class="text-white text-md font-semibold mb-3 pl-1">Pilihan Lain</h3>
+                    <div class="grid grid-cols-2 gap-3">
+                        <!-- Pindahkan Wang -->
+                        <button class="action-tile p-4 rounded-2xl flex flex-col items-start justify-between h-28" onclick="handleTileClick('Pindah')">
+                            <div class="p-2 rounded-full bg-teal-500/20 text-teal-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="m15 17 5-5-5-5" />
+                                    <path d="M2 12h18" />
+                                </svg>
+                            </div>
+                            <span class="text-sm font-semibold text-white">Pindahkan<br>Wang</span>
+                        </button>
+
+                        <!-- Kad Saya (New) -->
+                        <button class="action-tile p-4 rounded-2xl flex flex-col items-start justify-between h-28" onclick="handleTileClick('Kad Saya')">
+                            <div class="p-2 rounded-full bg-blue-500/20 text-blue-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect width="20" height="14" x="2" y="5" rx="2" />
+                                    <line x1="2" x2="22" y1="10" y2="10" />
+                                </svg>
+                            </div>
+                            <span class="text-sm font-semibold text-white">Kad<br>Saya</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="text-center mt-8 pb-4">
+                    <p class="text-xs text-gray-500 italic">Kemas kini akan datang.</p>
+                </div>
             </div>
-        </main>
+
+            <!-- Sticky Footer Navigation -->
+            <nav class="bottom-nav fixed bottom-0 w-full max-w-[440px] z-30 px-6 py-3 flex justify-between items-center">
+                <button onclick="window.scrollTo(0,0)" class="nav-item active flex flex-col items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                        <polyline points="9 22 9 12 15 12 15 22" />
+                    </svg>
+                    <span class="text-[10px] font-medium">Home</span>
+                </button>
+
+                <button onclick="handleTileClick('Bayar')" class="nav-item flex flex-col items-center gap-1">
+                    <div class="bg-teal-600 rounded-full p-3 -mt-8 shadow-lg shadow-teal-900/50 border-4 border-[#0f0f13] text-white">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" x2="12" y1="2" y2="22" />
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                        </svg>
+                    </div>
+                    <span class="text-[10px] font-medium text-white">Bayar</span>
+                </button>
+
+                <button onclick="handleTileClick('Akaun Saya')" class="nav-item flex flex-col items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                    </svg>
+                    <span class="text-[10px] font-medium">Akaun</span>
+                </button>
+            </nav>
+        </div>
     </div>
 
-    <!-- ORIGINAL JAVASCRIPT LOGIC - KEPT INTACT -->
     <script type="module">
         import {
             initializeApp
@@ -284,7 +377,7 @@
             getDoc
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Firebase config is crucial and must be kept as is
+        // Firebase config
         const firebaseConfig = {
             apiKey: "AIzaSyBpIKSxSnYfvBQia3rlOseBtnSVqThX18c",
             authDomain: "superblyns.firebaseapp.com",
@@ -298,20 +391,26 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // UI elements update
+        // UI Refs
+        const pinContainer = document.getElementById('pinContainer');
+        const dashboardContainer = document.getElementById('dashboardContainer');
         const balanceSpan = document.getElementById('currentBalance');
         const accountNumberShown = document.getElementById('accountNumberShown');
         const accountNumberHidden = document.getElementById('accountNumberHidden');
-        const welcomeName = document.getElementById('welcomeNameDisplay'); // Updated ID for H1
+        const welcomeName = document.getElementById('welcomeNameDisplay');
         const btnToggleBalance = document.getElementById('btnToggleBalance');
         const iconEye = document.getElementById('iconEye');
         const iconEyeOff = document.getElementById('iconEyeOff');
+        const pinErrorMsg = document.getElementById('pinErrorMsg');
 
         let userBalance = "0.00";
         let activated = false;
         let isBalanceHidden = false;
+        let dbPinHash = ""; // Stores the hashed PIN from Firebase
+        let currentPinInput = "";
+        let pinAttempts = 0;
 
-        // Function: Handle Logout (Must remain the same)
+        // Logout
         async function handleLogout() {
             try {
                 await signOut(auth);
@@ -322,14 +421,11 @@
         }
         window.handleLogout = handleLogout;
 
-        // Function: Handle Tile Click (Must remain the same)
+        // Navigation Handler
         window.handleTileClick = (actionName) => {
-            const blockedTiles = ["Bayar", "Tambah Wang", "Pindah"];
+            const blockedTiles = ["Bayar", "Tambah Wang", "Pindah", "Kad Saya"];
             if (!activated && blockedTiles.includes(actionName)) {
-                // IMPORTANT: Replacing alert() with a console log or a safer UI notification is best practice, 
-                // but since the instruction was to not change the function system, I'm noting the original:
-                // Original: alert("Akaun belum aktif. Tile ini tidak boleh digunakan.");
-                console.log("ALERT: Akaun belum aktif. Tile ini tidak boleh digunakan.");
+                console.log("ALERT: Akaun belum aktif.");
                 return;
             }
             const urls = {
@@ -337,12 +433,13 @@
                 "Tambah Wang": "https://blynsbank.github.io/tambahwang/",
                 "Pindah": "https://blynsbank.github.io/pindahwang/",
                 "Aktifkan": "https://blynsbank.github.io/aktivasi/",
-                "Akaun Saya": "https://blynsbank.github.io/akaunsaya/"
+                "Akaun Saya": "https://blynsbank.github.io/akaunsaya/",
+                "Kad Saya": "https://blynsbank.github.io/kadsaya/" // New URL
             }
-            window.location.href = urls[actionName] || "https://blynsbank.github.io/error/";
+            if (urls[actionName]) window.location.href = urls[actionName];
         };
 
-        // Event Listener: Toggle Balance (Must remain the same logic)
+        // Balance Toggle
         btnToggleBalance?.addEventListener('click', () => {
             isBalanceHidden = !isBalanceHidden;
             balanceSpan.textContent = isBalanceHidden ? "XXXXX.XX" : userBalance;
@@ -352,30 +449,98 @@
             iconEyeOff.classList.toggle('hidden', !isBalanceHidden);
         });
 
-        // Auth State Change Listener (Must remain the same)
+        // ------------------ PIN LOGIC ------------------ //
+
+        // Helper: SHA-256 Hashing
+        async function sha256(message) {
+            const msgBuffer = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        window.addPin = async (digit) => {
+            if (currentPinInput.length < 6) {
+                currentPinInput += digit;
+                updatePinDots();
+                if (currentPinInput.length === 6) {
+                    await verifyPin();
+                }
+            }
+        };
+
+        window.deletePin = () => {
+            if (currentPinInput.length > 0) {
+                currentPinInput = currentPinInput.slice(0, -1);
+                updatePinDots();
+            }
+        };
+
+
+        function updatePinDots() {
+            const dots = [
+                dot1, dot2, dot3, dot4, dot5, dot6
+            ];
+
+            dots.forEach((dot, i) => {
+                dot.classList.toggle("filled", i < currentPinInput.length);
+            });
+        }
+
+
+        async function verifyPin() {
+            // Hash the input to compare with DB hash
+            const inputHash = await sha256(currentPinInput);
+
+            if (inputHash === dbPinHash) {
+                // SUCCESS
+                pinContainer.classList.add('hidden');
+                dashboardContainer.classList.remove('hidden');
+            } else {
+                // FAIL
+                pinAttempts++;
+                currentPinInput = "";
+                updatePinDots();
+                pinErrorMsg.textContent = `PIN Salah (${pinAttempts}/5)`;
+
+                // Add shake animation
+                const dots = document.querySelector('.flex.space-x-4');
+                dots.style.transform = "translateX(10px)";
+                setTimeout(() => dots.style.transform = "translateX(-10px)", 50);
+                setTimeout(() => dots.style.transform = "translateX(0)", 100);
+
+                if (pinAttempts >= 5) {
+                    alert("Terlalu banyak percubaan gagal. Log keluar...");
+                    await handleLogout();
+                }
+            }
+        }
+
+        // ------------------ INIT ------------------ //
+
         onAuthStateChanged(auth, async (user) => {
             if (!user) {
                 window.location.href = "https://blynsbank.github.io/logmasuk/";
                 return;
             }
-            try {
-                const ref = doc(db, "users", user.uid);
-                const snap = await getDoc(ref);
-                if (!snap.exists()) {
-                    await handleLogout();
-                    return;
-                }
-                const data = snap.data();
-                userBalance = data.balance || "0.00";
-                activated = data.activated || false;
-                welcomeName.textContent = data.fullname;
-                balanceSpan.textContent = userBalance;
-                accountNumberShown.textContent = data.cardnumber;
-                accountNumberHidden.textContent = "xxxxxxxxxx";
-            } catch (err) {
-                console.error(err);
-                await handleLogout();
-            }
+
+            // Bila user login, buka PIN overlay
+            pinContainer.classList.remove("hidden");
+
+            // Ambil data Firestore user
+            const ref = doc(db, "users", user.uid);
+            const snap = await getDoc(ref);
+
+            if (!snap.exists()) return;
+
+            const data = snap.data();
+
+            welcomeName.textContent = data.fullname;
+            userBalance = data.balance;
+            balanceSpan.textContent = userBalance;
+
+            activated = data.activated;
+            dbPinHash = data.pinHash;
         });
     </script>
 </body>
