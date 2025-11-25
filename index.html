@@ -8,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+
         :root {
             /* Primary Color: Teal */
             --primary-color: #0d9488;
@@ -151,9 +152,9 @@
             <button id="btnLogout" onclick="handleLogout()" class="btn-logout text-gray-400 hover:text-red-500 transition duration-150 p-2 rounded-full">
                 <!-- Lucide: LogOut -->
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                    <path d="M16 17l5-5-5-5"/>
-                    <path d="M21 12H9"/>
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <path d="M16 17l5-5-5-5" />
+                    <path d="M21 12H9" />
                 </svg>
             </button>
         </header>
@@ -172,8 +173,16 @@
                     <!-- Toggle Balance Button -->
                     <button id="btnToggleBalance" class="text-white opacity-90 p-1 hover:opacity-100 transition focus:outline-none rounded-full" aria-label="Toggle Balance Visibility">
                         <!-- Lucide: Eye / EyeOff -->
-                        <svg id="iconEye" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
-                        <svg id="iconEyeOff" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.78 9.78 0 0 0 5.46-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg>
+                        <svg id="iconEye" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                            <circle cx="12" cy="12" r="3" />
+                        </svg>
+                        <svg id="iconEyeOff" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden">
+                            <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
+                            <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" />
+                            <path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.78 9.78 0 0 0 5.46-1.61" />
+                            <line x1="2" x2="22" y1="2" y2="22" />
+                        </svg>
                     </button>
                 </div>
 
@@ -192,11 +201,16 @@
                 <div class="pay-rect w-full py-3 px-4 rounded-xl flex items-center justify-between text-white font-semibold cursor-pointer hover:bg-white/10 transition" onclick="handleTileClick('Bayar')">
                     <span class="flex items-center space-x-3 text-lg">
                         <!-- Lucide: Send -->
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4 20-7Z"/><path d="M22 2 11 13"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m22 2-7 20-4-9-9-4 20-7Z" />
+                            <path d="M22 2 11 13" />
+                        </svg>
                         <span>Bayar</span>
                     </span>
                     <!-- Lucide: Chevron Right -->
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m9 18 6-6-6-6" />
+                    </svg>
                 </div>
             </div>
 
@@ -206,7 +220,10 @@
                 <button class="action-tile p-5 rounded-2xl text-center flex flex-col items-center justify-center space-y-2 h-36" onclick="handleTileClick('Tambah Wang')">
                     <!-- Icon: Trending Up -->
                     <div class="p-3 rounded-full bg-teal-600/20 text-teal-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13 16 16 19 22 19"/><path d="M8 8a3 3 0 1 0-3 3v8a2 2 0 0 0 2 2h7"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="22 7 13 16 16 19 22 19" />
+                            <path d="M8 8a3 3 0 1 0-3 3v8a2 2 0 0 0 2 2h7" />
+                        </svg>
                     </div>
                     <span class="text-sm font-semibold text-white pt-1">Tambah Wang</span>
                 </button>
@@ -215,7 +232,10 @@
                 <button class="action-tile p-5 rounded-2xl text-center flex flex-col items-center justify-center space-y-2 h-36" onclick="handleTileClick('Pindah')">
                     <!-- Icon: Repeat -->
                     <div class="p-3 rounded-full bg-teal-600/20 text-teal-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 17 5-5-5-5"/><path d="M2 12h18"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m15 17 5-5-5-5" />
+                            <path d="M2 12h18" />
+                        </svg>
                     </div>
                     <span class="text-sm font-semibold text-white pt-1">Pindahkan Wang</span>
                 </button>
@@ -224,7 +244,11 @@
                 <button class="action-tile p-5 rounded-2xl text-center flex flex-col items-center justify-center space-y-2 h-36" onclick="handleTileClick('Aktifkan')">
                     <!-- Icon: Key -->
                     <div class="p-3 rounded-full bg-teal-600/20 text-teal-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10c-1.33-1.66-3-2.66-5-3-2 .34-3.67 1.34-5 3v11c2.25-1.5 4.5-2.5 7-3.25"/><path d="M12 2v20"/><path d="M22 7c-3-2-7-2-10 0"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 10c-1.33-1.66-3-2.66-5-3-2 .34-3.67 1.34-5 3v11c2.25-1.5 4.5-2.5 7-3.25" />
+                            <path d="M12 2v20" />
+                            <path d="M22 7c-3-2-7-2-10 0" />
+                        </svg>
                     </div>
                     <span class="text-sm font-semibold text-white pt-1">Aktivasi</span>
                 </button>
@@ -233,7 +257,10 @@
                 <button class="action-tile p-5 rounded-2xl text-center flex flex-col items-center justify-center space-y-2 h-36" onclick="handleTileClick('Akaun Saya')">
                     <!-- Icon: User -->
                     <div class="p-3 rounded-full bg-teal-600/20 text-teal-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg>
                     </div>
                     <span class="text-sm font-semibold text-white pt-1">Akaun Saya</span>
                 </button>
@@ -243,9 +270,19 @@
 
     <!-- ORIGINAL JAVASCRIPT LOGIC - KEPT INTACT -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import {
+            initializeApp
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import {
+            getAuth,
+            onAuthStateChanged,
+            signOut
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import {
+            getFirestore,
+            doc,
+            getDoc
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Firebase config is crucial and must be kept as is
         const firebaseConfig = {
@@ -317,19 +354,28 @@
 
         // Auth State Change Listener (Must remain the same)
         onAuthStateChanged(auth, async (user) => {
-            if (!user) { window.location.href = "https://blynsbank.github.io/logmasuk/"; return; }
+            if (!user) {
+                window.location.href = "https://blynsbank.github.io/logmasuk/";
+                return;
+            }
             try {
                 const ref = doc(db, "users", user.uid);
                 const snap = await getDoc(ref);
-                if (!snap.exists()) { await handleLogout(); return; }
+                if (!snap.exists()) {
+                    await handleLogout();
+                    return;
+                }
                 const data = snap.data();
                 userBalance = data.balance || "0.00";
                 activated = data.activated || false;
                 welcomeName.textContent = data.fullname;
                 balanceSpan.textContent = userBalance;
-                accountNumberShown.textContent = data.cardnumber || "xxxxxxxxxx";
-                accountNumberHidden.textContent = data.cardnumber || "xxxxxxxxxx";
-            } catch(err) { console.error(err); await handleLogout(); }
+                accountNumberShown.textContent = data.cardnumber;
+                accountNumberHidden.textContent = "xxxxxxxxxx";
+            } catch (err) {
+                console.error(err);
+                await handleLogout();
+            }
         });
     </script>
 </body>
