@@ -10,10 +10,8 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
 
         :root {
-            /* Primary Color: Teal */
             --primary-color: #0d9488;
             --primary-light: #2dd4bf;
-            /* Dark Background Palette */
             --bg-dark: #0f0f13;
             --bg-card: #16161a;
             --text-light: #e0e0e3;
@@ -50,22 +48,8 @@
             opacity: 0.2;
             pointer-events: none;
         }
-
-        .blob-1 {
-            top: -15%;
-            left: -30%;
-            width: 350px;
-            height: 350px;
-            background: var(--primary-color);
-        }
-
-        .blob-2 {
-            bottom: -15%;
-            right: -30%;
-            width: 300px;
-            height: 300px;
-            background: #3b82f6;
-        }
+        .blob-1 { top: -15%; left: -30%; width: 350px; height: 350px; background: var(--primary-color); }
+        .blob-2 { bottom: -15%; right: -30%; width: 300px; height: 300px; background: #3b82f6; }
 
         .sticky-header {
             background-color: var(--bg-dark);
@@ -84,17 +68,9 @@
         }
 
         @keyframes gradientBG {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         /* Action Tiles */
@@ -105,10 +81,7 @@
             position: relative;
             overflow: hidden;
         }
-
-        .action-tile:active {
-            transform: scale(0.98);
-        }
+        .action-tile:active { transform: scale(0.98); }
 
         /* Footer Nav */
         .bottom-nav {
@@ -117,23 +90,13 @@
             border-top: 1px solid rgba(255, 255, 255, 0.1);
             padding-bottom: env(safe-area-inset-bottom);
         }
-
-        .nav-item {
-            color: #888;
-            transition: 0.3s;
-        }
-
-        .nav-item.active {
-            color: var(--primary-light);
-        }
+        .nav-item { color: #888; transition: 0.3s; }
+        .nav-item.active { color: var(--primary-light); }
 
         /* PIN Screen Styles */
         #pinContainer {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg-dark);
             z-index: 50;
             display: flex;
@@ -141,52 +104,33 @@
             align-items: center;
             justify-content: center;
         }
-
         .pin-dot {
-            width: 16px;
-            height: 16px;
+            width: 16px; height: 16px;
             border-radius: 50%;
             border: 2px solid var(--primary-color);
             transition: 0.2s;
         }
-
-        .pin-dot.filled {
-            background: var(--primary-light);
-            border-color: var(--primary-light);
-        }
-
+        .pin-dot.filled { background: var(--primary-light); border-color: var(--primary-light); }
         .keypad-btn {
-            width: 70px;
-            height: 70px;
+            width: 70px; height: 70px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.1);
-            font-size: 24px;
-            font-weight: 600;
+            font-size: 24px; font-weight: 600;
             color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             transition: 0.2s;
             cursor: pointer;
             user-select: none;
         }
-
-        .keypad-btn:active {
-            background: rgba(255, 255, 255, 0.3);
-        }
+        .keypad-btn:active { background: rgba(255, 255, 255, 0.3); }
 
         /* Scrollable Area */
         .content-scroll {
             flex: 1;
             overflow-y: auto;
             padding-bottom: 100px;
-            /* Space for footer */
         }
-
-        /* Hide scrollbar */
-        .content-scroll::-webkit-scrollbar {
-            display: none;
-        }
+        .content-scroll::-webkit-scrollbar { display: none; }
     </style>
 </head>
 
@@ -230,11 +174,7 @@
                 <div class="keypad-btn bg-transparent"></div>
                 <div class="keypad-btn" onclick="addPin(0)">0</div>
                 <div class="keypad-btn bg-transparent text-red-400" onclick="deletePin()">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z" />
-                        <line x1="18" y1="9" x2="12" y2="15" />
-                        <line x1="12" y1="9" x2="18" y2="15" />
-                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z" /><line x1="18" y1="9" x2="12" y2="15" /><line x1="12" y1="9" x2="18" y2="15" /></svg>
                 </div>
             </div>
         </div>
@@ -245,11 +185,7 @@
             <header class="sticky-header sticky top-0 z-20 px-6 py-4 flex items-center justify-between">
                 <img src="https://i.postimg.cc/QdHXM5RS/Blyns-Bank-Head-Logo.png" alt="Blyns Bank" class="h-8 w-auto filter brightness-110">
                 <button id="btnLogout" onclick="handleLogout()" class="text-gray-400 hover:text-red-500 transition duration-150 p-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                        <path d="M16 17l5-5-5-5" />
-                        <path d="M21 12H9" />
-                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><path d="M16 17l5-5-5-5" /><path d="M21 12H9" /></svg>
                 </button>
             </header>
 
@@ -273,15 +209,8 @@
                             </h2>
                         </div>
                         <button id="btnToggleBalance" class="text-white opacity-80 hover:opacity-100 transition">
-                            <svg id="iconEye" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
-                                <circle cx="12" cy="12" r="3" />
-                            </svg>
-                            <svg id="iconEyeOff" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="hidden">
-                                <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
-                                <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" />
-                                <line x1="2" x2="22" y1="2" y2="22" />
-                            </svg>
+                            <svg id="iconEye" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" /><circle cx="12" cy="12" r="3" /></svg>
+                            <svg id="iconEyeOff" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="hidden"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" /><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" /><line x1="2" x2="22" y1="2" y2="22" /></svg>
                         </button>
                     </div>
 
@@ -305,10 +234,7 @@
                         <!-- Pindahkan Wang -->
                         <button class="action-tile p-4 rounded-2xl flex flex-col items-start justify-between h-28" onclick="handleTileClick('Pindah')">
                             <div class="p-2 rounded-full bg-teal-500/20 text-teal-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="m15 17 5-5-5-5" />
-                                    <path d="M2 12h18" />
-                                </svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 17 5-5-5-5" /><path d="M2 12h18" /></svg>
                             </div>
                             <span class="text-sm font-semibold text-white">Pindahkan<br>Wang</span>
                         </button>
@@ -316,10 +242,7 @@
                         <!-- Kad Saya (New) -->
                         <button class="action-tile p-4 rounded-2xl flex flex-col items-start justify-between h-28" onclick="handleTileClick('Kad Saya')">
                             <div class="p-2 rounded-full bg-blue-500/20 text-blue-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect width="20" height="14" x="2" y="5" rx="2" />
-                                    <line x1="2" x2="22" y1="10" y2="10" />
-                                </svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2" /><line x1="2" x2="22" y1="10" y2="10" /></svg>
                             </div>
                             <span class="text-sm font-semibold text-white">Kad<br>Saya</span>
                         </button>
@@ -334,28 +257,17 @@
             <!-- Sticky Footer Navigation -->
             <nav class="bottom-nav fixed bottom-0 w-full max-w-[440px] z-30 px-6 py-3 flex justify-between items-center">
                 <button onclick="window.scrollTo(0,0)" class="nav-item active flex flex-col items-center gap-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                        <polyline points="9 22 9 12 15 12 15 22" />
-                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
                     <span class="text-[10px] font-medium">Home</span>
                 </button>
-
                 <button onclick="handleTileClick('Bayar')" class="nav-item flex flex-col items-center gap-1">
                     <div class="bg-teal-600 rounded-full p-3 -mt-8 shadow-lg shadow-teal-900/50 border-4 border-[#0f0f13] text-white">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="12" x2="12" y1="2" y2="22" />
-                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="2" y2="22" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
                     </div>
                     <span class="text-[10px] font-medium text-white">Bayar</span>
                 </button>
-
                 <button onclick="handleTileClick('Akaun Saya')" class="nav-item flex flex-col items-center gap-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-                        <circle cx="12" cy="7" r="4" />
-                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
                     <span class="text-[10px] font-medium">Akaun</span>
                 </button>
             </nav>
@@ -363,19 +275,9 @@
     </div>
 
     <script type="module">
-        import {
-            initializeApp
-        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import {
-            getAuth,
-            onAuthStateChanged,
-            signOut
-        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import {
-            getFirestore,
-            doc,
-            getDoc
-        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Firebase config
         const firebaseConfig = {
@@ -412,11 +314,7 @@
 
         // LOGOUT
         async function handleLogout() {
-            try {
-                await signOut(auth);
-            } catch (error) {
-                console.error("Logout Error:", error);
-            }
+            try { await signOut(auth); } catch (error) { console.error("Logout Error:", error); }
             window.location.href = "https://blynsbank.github.io/logmasuk/";
         }
         window.handleLogout = handleLogout;
@@ -428,7 +326,6 @@
                 console.log("ALERT: Akaun belum aktif.");
                 return;
             }
-
             const urls = {
                 "Bayar": "https://blynsbank.github.io/bayar/",
                 "Tambah Wang": "https://blynsbank.github.io/tambahwang/",
@@ -437,7 +334,6 @@
                 "Akaun Saya": "https://blynsbank.github.io/akaunsaya/",
                 "Kad Saya": "https://blynsbank.github.io/kadsaya/"
             };
-
             if (urls[actionName]) window.location.href = urls[actionName];
         };
 
@@ -472,37 +368,67 @@
 
         // Delete Digit
         window.deletePin = () => {
-            currentPinInput = currentPinInput.slice(0, -1);
-            updatePinDots();
+            if (currentPinInput.length > 0) {
+                currentPinInput = currentPinInput.slice(0, -1);
+                updatePinDots();
+            }
         };
 
-        // UI PIN DOTS
+        // UI PIN DOTS (Fixed: Get elements by ID explicitly)
         function updatePinDots() {
-            const dots = [dot1, dot2, dot3, dot4, dot5, dot6];
+            const dots = [
+                document.getElementById('dot1'),
+                document.getElementById('dot2'),
+                document.getElementById('dot3'),
+                document.getElementById('dot4'),
+                document.getElementById('dot5'),
+                document.getElementById('dot6')
+            ];
             dots.forEach((dot, i) => {
-                dot.classList.toggle("filled", i < currentPinInput.length);
+                if (dot) dot.classList.toggle("filled", i < currentPinInput.length);
             });
         }
 
-        // Verify PIN
+        // Verify PIN (Fixed: Checks both Hash and Plain text)
         async function verifyPin() {
-            const hashed = await sha256(currentPinInput);
+            const hashedInput = await sha256(currentPinInput);
 
-            if (hashed === dbPinHash) {
+            // Debugging (Boleh tengok console untuk check value)
+            console.log("Input PIN:", currentPinInput);
+            console.log("Hashed Input:", hashedInput);
+            console.log("DB Value:", dbPinHash);
+
+            // LOGIC FIX: Check if matches Hash OR matches Plain Text
+            // This ensures it works if you stored "123456" OR the hashed version in DB
+            if (hashedInput === dbPinHash || currentPinInput === dbPinHash) {
+                console.log("PIN Verified! Unlocking...");
                 pinErrorMsg.textContent = "";
+                
+                // Force UI Update
+                pinContainer.style.display = 'none'; // Safer than just classList
                 pinContainer.classList.add("hidden");
                 dashboardContainer.classList.remove("hidden");
 
                 currentPinInput = "";
                 updatePinDots();
             } else {
+                console.log("PIN Failed.");
                 pinAttempts++;
                 pinErrorMsg.textContent = "PIN salah, cuba lagi.";
                 currentPinInput = "";
                 updatePinDots();
 
+                // Shake animation
+                const dotContainer = document.querySelector('#pinContainer .flex');
+                if(dotContainer) {
+                    dotContainer.style.transform = "translateX(10px)";
+                    setTimeout(() => dotContainer.style.transform = "translateX(-10px)", 50);
+                    setTimeout(() => dotContainer.style.transform = "translateX(0)", 100);
+                }
+
                 if (pinAttempts >= 5) {
-                    pinErrorMsg.textContent = "Terlalu banyak cubaan. Akaun dikunci sementara.";
+                    alert("Terlalu banyak cubaan. Log keluar...");
+                    await handleLogout();
                 }
             }
         }
@@ -514,26 +440,32 @@
                 return;
             }
 
-            const snap = await getDoc(doc(db, "users", user.uid));
-
-            if (!snap.exists()) {
-                console.log("User doc tak wujud.");
-                return;
-            }
-
-            const data = snap.data();
-
-            welcomeName.textContent = data.fullname || "Pengguna";
-            userBalance = data.balance || "0.00";
-            balanceSpan.textContent = userBalance;
-            accountNumberShown.textContent = data.cardNumb || "XXXXXXXXXX";
-
-            activated = data.activated || false;
-            dbPinHash = data.pin || "";
-
-            // Always start with PIN screen
+            // Ensure PIN screen is visible on load
+            pinContainer.style.display = 'flex';
             pinContainer.classList.remove("hidden");
             dashboardContainer.classList.add("hidden");
+
+            try {
+                const snap = await getDoc(doc(db, "users", user.uid));
+                if (!snap.exists()) {
+                    console.log("User doc tak wujud.");
+                    return;
+                }
+
+                const data = snap.data();
+                welcomeName.textContent = data.fullname || "Pengguna";
+                userBalance = data.balance || "0.00";
+                balanceSpan.textContent = userBalance;
+                
+                // Handle different field names for card number
+                accountNumberShown.textContent = data.cardnumber || data.cardNumb || "XXXXXXXXXX";
+
+                activated = data.activated || false;
+                dbPinHash = data.pin || "";
+
+            } catch (e) {
+                console.error("Error fetching user data:", e);
+            }
         });
     </script>
 </body>
