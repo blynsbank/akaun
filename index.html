@@ -73,25 +73,75 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Action Tiles */
-        .action-tile {
+        /* Interactive Elements */
+        .btn-interactive {
+            transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s;
+        }
+        .btn-interactive:active {
+            transform: scale(0.92);
+        }
+
+        /* Action Tiles (Icon Only) */
+        .action-tile-icon {
             background: var(--bg-card);
-            transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
             border: 1px solid rgba(255, 255, 255, 0.1);
             position: relative;
             overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            aspect-ratio: 1/1; /* Makes it a square */
+            border-radius: 20px;
+            transition: all 0.2s ease;
         }
-        .action-tile:active { transform: scale(0.98); }
+        .action-tile-icon:active {
+            transform: scale(0.95);
+            border-color: var(--primary-light);
+            background: rgba(255, 255, 255, 0.08);
+        }
 
-        /* Footer Nav */
+        /* Footer Nav with Gradient & Shadow */
         .bottom-nav {
-            background: rgba(15, 15, 19, 0.95);
-            backdrop-filter: blur(10px);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(15, 15, 19, 0.85);
+            backdrop-filter: blur(15px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
             padding-bottom: env(safe-area-inset-bottom);
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8); /* Deep shadow */
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 440px;
+            z-index: 30;
         }
-        .nav-item { color: #888; transition: 0.3s; }
-        .nav-item.active { color: var(--primary-light); }
+        
+        /* Gradient line at top of footer */
+        .bottom-nav::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        }
+
+        .nav-item { color: #6b7280; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .nav-item:active { transform: scale(0.85); }
+        .nav-item.active { color: var(--primary-light); text-shadow: 0 0 10px rgba(45, 212, 191, 0.5); }
+
+        /* Floating Pay Button in Footer */
+        .nav-pay-btn {
+            background: linear-gradient(135deg, #0d9488, #0f766e);
+            border: 4px solid var(--bg-dark);
+            box-shadow: 0 0 15px rgba(13, 148, 136, 0.4);
+            transform: translateY(-20px);
+            transition: all 0.2s ease;
+        }
+        .nav-pay-btn:active {
+            transform: translateY(-20px) scale(0.9);
+            box-shadow: 0 0 5px rgba(13, 148, 136, 0.6);
+        }
 
         /* PIN Screen Styles */
         #pinContainer {
@@ -110,25 +160,30 @@
             border: 2px solid var(--primary-color);
             transition: 0.2s;
         }
-        .pin-dot.filled { background: var(--primary-light); border-color: var(--primary-light); }
+        .pin-dot.filled { background: var(--primary-light); border-color: var(--primary-light); box-shadow: 0 0 10px var(--primary-color); }
         .keypad-btn {
             width: 70px; height: 70px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
             font-size: 24px; font-weight: 600;
             color: white;
             display: flex; align-items: center; justify-content: center;
-            transition: 0.2s;
+            transition: all 0.15s ease;
             cursor: pointer;
             user-select: none;
+            border: 1px solid transparent;
         }
-        .keypad-btn:active { background: rgba(255, 255, 255, 0.3); }
+        .keypad-btn:active { 
+            background: rgba(255, 255, 255, 0.2); 
+            transform: scale(0.9);
+            border-color: var(--primary-light);
+        }
 
         /* Scrollable Area */
         .content-scroll {
             flex: 1;
             overflow-y: auto;
-            padding-bottom: 100px;
+            padding-bottom: 120px; /* More space for footer */
         }
         .content-scroll::-webkit-scrollbar { display: none; }
     </style>
@@ -158,7 +213,7 @@
                 <div class="pin-dot" id="dot6"></div>
             </div>
 
-            <p id="pinErrorMsg" class="text-red-500 text-sm mb-4 h-5"></p>
+            <p id="pinErrorMsg" class="text-red-500 text-sm mb-4 h-5 font-medium"></p>
 
             <!-- Keypad -->
             <div class="grid grid-cols-3 gap-6">
@@ -184,7 +239,7 @@
             <!-- Sticky Header -->
             <header class="sticky-header sticky top-0 z-20 px-6 py-4 flex items-center justify-between">
                 <img src="https://i.postimg.cc/QdHXM5RS/Blyns-Bank-Head-Logo.png" alt="Blyns Bank" class="h-8 w-auto filter brightness-110">
-                <button id="btnLogout" onclick="handleLogout()" class="text-gray-400 hover:text-red-500 transition duration-150 p-2">
+                <button id="btnLogout" onclick="handleLogout()" class="btn-interactive text-gray-400 hover:text-red-500 p-2 rounded-full hover:bg-white/5">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><path d="M16 17l5-5-5-5" /><path d="M21 12H9" /></svg>
                 </button>
             </header>
@@ -200,7 +255,7 @@
                 </div>
 
                 <!-- Balance Card -->
-                <div class="balance-card p-6 rounded-3xl mb-8 transform transition duration-300">
+                <div class="balance-card p-6 rounded-3xl mb-10 transform transition duration-300">
                     <div class="flex justify-between items-start mb-2">
                         <div>
                             <p class="text-white text-xs opacity-80 font-medium mb-1">Baki Semasa</p>
@@ -208,9 +263,9 @@
                                 RM <span id="currentBalance">00.00</span>
                             </h2>
                         </div>
-                        <button id="btnToggleBalance" class="text-white opacity-80 hover:opacity-100 transition">
-                            <svg id="iconEye" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" /><circle cx="12" cy="12" r="3" /></svg>
-                            <svg id="iconEyeOff" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="hidden"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" /><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" /><line x1="2" x2="22" y1="2" y2="22" /></svg>
+                        <button id="btnToggleBalance" class="btn-interactive text-white opacity-80 hover:opacity-100 p-1">
+                            <svg id="iconEye" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" /><circle cx="12" cy="12" r="3" /></svg>
+                            <svg id="iconEyeOff" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="hidden"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" /><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" /><line x1="2" x2="22" y1="2" y2="22" /></svg>
                         </button>
                     </div>
 
@@ -221,7 +276,7 @@
 
                     <div class="flex justify-between items-center border-t border-white/20 pt-4">
                         <span class="text-white font-bold italic text-lg tracking-wider">Blyns+</span>
-                        <button onclick="handleTileClick('Tambah Wang')" class="bg-white text-teal-700 px-4 py-1.5 rounded-full text-xs font-bold shadow-lg hover:bg-gray-100 transition transform hover:scale-105">
+                        <button onclick="handleTileClick('Tambah Wang')" class="btn-interactive bg-white text-teal-700 px-5 py-2 rounded-full text-xs font-bold shadow-lg">
                             + Tambah
                         </button>
                     </div>
@@ -229,44 +284,69 @@
 
                 <!-- Action Section -->
                 <div class="mb-4">
-                    <h3 class="text-white text-md font-semibold mb-3 pl-1">Pilihan Lain</h3>
-                    <div class="grid grid-cols-2 gap-3">
+                    <h3 class="text-white text-md font-semibold mb-4 pl-1 flex items-center gap-2">
+                        Pilihan Lain
+                        <div class="h-px bg-gray-700 flex-grow ml-2"></div>
+                    </h3>
+                    
+                    <!-- NEW TILES GRID LAYOUT -->
+                    <div class="grid grid-cols-4 gap-4 justify-between">
                         <!-- Pindahkan Wang -->
-                        <button class="action-tile p-4 rounded-2xl flex flex-col items-start justify-between h-28" onclick="handleTileClick('Pindah')">
-                            <div class="p-2 rounded-full bg-teal-500/20 text-teal-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 17 5-5-5-5" /><path d="M2 12h18" /></svg>
-                            </div>
-                            <span class="text-sm font-semibold text-white">Pindahkan<br>Wang</span>
-                        </button>
+                        <div class="flex flex-col items-center gap-2">
+                            <button class="action-tile-icon" onclick="handleTileClick('Pindah')">
+                                <div class="p-3 rounded-full bg-teal-500/10 text-teal-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 17 5-5-5-5" /><path d="M2 12h18" /></svg>
+                                </div>
+                            </button>
+                            <span class="text-[11px] font-medium text-gray-400 text-center leading-tight">Pindah<br>Wang</span>
+                        </div>
 
-                        <!-- Kad Saya (New) -->
-                        <button class="action-tile p-4 rounded-2xl flex flex-col items-start justify-between h-28" onclick="handleTileClick('Kad Saya')">
-                            <div class="p-2 rounded-full bg-blue-500/20 text-blue-400">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2" /><line x1="2" x2="22" y1="10" y2="10" /></svg>
+                        <!-- Kad Saya -->
+                        <div class="flex flex-col items-center gap-2">
+                            <button class="action-tile-icon" onclick="handleTileClick('Kad Saya')">
+                                <div class="p-3 rounded-full bg-blue-500/10 text-blue-400">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2" /><line x1="2" x2="22" y1="10" y2="10" /></svg>
+                                </div>
+                            </button>
+                            <span class="text-[11px] font-medium text-gray-400 text-center leading-tight">Kad<br>Saya</span>
+                        </div>
+
+                        <!-- Placeholder 1 (Future) -->
+                        <div class="flex flex-col items-center gap-2 opacity-30 pointer-events-none grayscale">
+                             <div class="action-tile-icon border-dashed">
+                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                             </div>
+                             <span class="text-[11px] font-medium text-gray-500 text-center">Lagi</span>
+                        </div>
+                         
+                         <!-- Placeholder 2 (Future) -->
+                         <div class="flex flex-col items-center gap-2 opacity-30 pointer-events-none grayscale">
+                            <div class="action-tile-icon border-dashed">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
                             </div>
-                            <span class="text-sm font-semibold text-white">Kad<br>Saya</span>
-                        </button>
+                            <span class="text-[11px] font-medium text-gray-500 text-center">Lagi</span>
+                       </div>
                     </div>
                 </div>
 
                 <div class="text-center mt-8 pb-4">
-                    <p class="text-xs text-gray-500 italic">Kemas kini akan datang.</p>
+                    <p class="text-[10px] text-gray-600 tracking-wider uppercase">Kemas kini akan datang</p>
                 </div>
             </div>
 
-            <!-- Sticky Footer Navigation -->
-            <nav class="bottom-nav fixed bottom-0 w-full max-w-[440px] z-30 px-6 py-3 flex justify-between items-center">
-                <button onclick="window.scrollTo(0,0)" class="nav-item active flex flex-col items-center gap-1">
+            <!-- Sticky Footer Navigation (Enhanced) -->
+            <nav class="bottom-nav flex justify-between items-end px-8 pb-4 pt-2">
+                <button onclick="window.scrollTo(0,0)" class="nav-item active flex flex-col items-center gap-1 p-2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
                     <span class="text-[10px] font-medium">Home</span>
                 </button>
-                <button onclick="handleTileClick('Bayar')" class="nav-item flex flex-col items-center gap-1">
-                    <div class="bg-teal-600 rounded-full p-3 -mt-8 shadow-lg shadow-teal-900/50 border-4 border-[#0f0f13] text-white">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="2" y2="22" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
-                    </div>
-                    <span class="text-[10px] font-medium text-white">Bayar</span>
+                
+                <!-- Raised Pay Button -->
+                <button onclick="handleTileClick('Bayar')" class="nav-pay-btn rounded-full p-4 flex items-center justify-center text-white mb-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="2" y2="22" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
                 </button>
-                <button onclick="handleTileClick('Akaun Saya')" class="nav-item flex flex-col items-center gap-1">
+
+                <button onclick="handleTileClick('Akaun Saya')" class="nav-item flex flex-col items-center gap-1 p-2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
                     <span class="text-[10px] font-medium">Akaun</span>
                 </button>
