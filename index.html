@@ -406,11 +406,11 @@
         let userBalance = "0.00";
         let activated = false;
         let isBalanceHidden = false;
-        let dbPinHash = ""; // Stores the hashed PIN from Firebase
+        let dbPinHash = "";
         let currentPinInput = "";
         let pinAttempts = 0;
 
-        // Logout
+        // LOGOUT
         async function handleLogout() {
             try {
                 await signOut(auth);
@@ -421,25 +421,27 @@
         }
         window.handleLogout = handleLogout;
 
-        // Navigation Handler
+        // TILE NAVIGATION
         window.handleTileClick = (actionName) => {
             const blockedTiles = ["Bayar", "Tambah Wang", "Pindah", "Kad Saya"];
             if (!activated && blockedTiles.includes(actionName)) {
                 console.log("ALERT: Akaun belum aktif.");
                 return;
             }
+
             const urls = {
                 "Bayar": "https://blynsbank.github.io/bayar/",
                 "Tambah Wang": "https://blynsbank.github.io/tambahwang/",
                 "Pindah": "https://blynsbank.github.io/pindahwang/",
                 "Aktifkan": "https://blynsbank.github.io/aktivasi/",
                 "Akaun Saya": "https://blynsbank.github.io/akaunsaya/",
-                "Kad Saya": "https://blynsbank.github.io/kadsaya/" // New URL
-            }
+                "Kad Saya": "https://blynsbank.github.io/kadsaya/"
+            };
+
             if (urls[actionName]) window.location.href = urls[actionName];
         };
 
-        // Balance Toggle
+        // SHOW / HIDE BALANCE
         btnToggleBalance?.addEventListener('click', () => {
             isBalanceHidden = !isBalanceHidden;
             balanceSpan.textContent = isBalanceHidden ? "XXXXX.XX" : userBalance;
@@ -451,57 +453,51 @@
 
         // ------------------ PIN LOGIC ------------------ //
 
-        // Helper: SHA-256 Hashing
+        // Hashing Helper
         async function sha256(message) {
             const msgBuffer = new TextEncoder().encode(message);
-            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashBuffer = await crypto.subtle.digest("SHA-256", msgBuffer);
             const hashArray = Array.from(new Uint8Array(hashBuffer));
             return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         }
 
+        // Add PIN Digit
         window.addPin = async (digit) => {
             if (currentPinInput.length < 6) {
                 currentPinInput += digit;
                 updatePinDots();
-                if (currentPinInput.length === 6) {
-                    await verifyPin();
-                }
+                if (currentPinInput.length === 6) verifyPin();
             }
         };
 
+        // Delete Digit
         window.deletePin = () => {
-            if (currentPinInput.length > 0) {
-                currentPinInput = currentPinInput.slice(0, -1);
-                updatePinDots();
-            }
+            currentPinInput = currentPinInput.slice(0, -1);
+            updatePinDots();
         };
 
-        // Update PIN Dots
+        // UI PIN DOTS
         function updatePinDots() {
-            for (let i = 1; i <= 6; i++) {
-                const dot = document.getElementById(`dot${i}`);
-                if (i <= currentPinInput.length) {
-                    dot.classList.add("filled");
-                } else {
-                    dot.classList.remove("filled");
-                }
-            }
+            const dots = [dot1, dot2, dot3, dot4, dot5, dot6];
+            dots.forEach((dot, i) => {
+                dot.classList.toggle("filled", i < currentPinInput.length);
+            });
         }
 
         // Verify PIN
         async function verifyPin() {
-            const hashInput = await sha256(currentPinInput);
+            const hashed = await sha256(currentPinInput);
 
-            if (hashInput === dbPinHash) {
+            if (hashed === dbPinHash) {
                 pinErrorMsg.textContent = "";
                 pinContainer.classList.add("hidden");
                 dashboardContainer.classList.remove("hidden");
+
                 currentPinInput = "";
                 updatePinDots();
             } else {
                 pinAttempts++;
                 pinErrorMsg.textContent = "PIN salah, cuba lagi.";
-
                 currentPinInput = "";
                 updatePinDots();
 
@@ -511,31 +507,31 @@
             }
         }
 
-        // AUTH LISTENER
+        // AUTH LISTEN
         onAuthStateChanged(auth, async (user) => {
             if (!user) {
                 window.location.href = "https://blynsbank.github.io/logmasuk/";
                 return;
             }
 
-            const docSnap = await getDoc(doc(db, "users", user.uid));
+            const snap = await getDoc(doc(db, "users", user.uid));
 
-            if (!docSnap.exists()) {
+            if (!snap.exists()) {
                 console.log("User doc tak wujud.");
                 return;
             }
 
-            const data = docSnap.data();
+            const data = snap.data();
 
-            welcomeName.textContent = data.fullname;
-            userBalance = data.balance;
+            welcomeName.textContent = data.fullname || "Pengguna";
+            userBalance = data.balance || "0.00";
             balanceSpan.textContent = userBalance;
-            accountNumberShown.textContent = data.cardNumb;
+            accountNumberShown.textContent = data.cardNumb || "XXXXXXXXXX";
 
             activated = data.activated || false;
             dbPinHash = data.pin || "";
 
-            // First show PIN screen
+            // Always start with PIN screen
             pinContainer.classList.remove("hidden");
             dashboardContainer.classList.add("hidden");
         });
